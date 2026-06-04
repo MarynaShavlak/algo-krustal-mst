@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "algo-krustal-mst"
+version = "1.0.0"
+description = "Алгоритм Краскала (мінімальне остовне дерево) з покроковими візуалізаціями та структурою Union-Find (DSU)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "Maryna Shavlak", email = "shavlakmaryna@gmail.com" },
+]
+keywords = [
+    "kruskal", "minimum-spanning-tree", "mst", "union-find", "dsu",
+    "graph-algorithms", "visualization", "networkx", "matplotlib",
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Intended Audience :: Education",
+]
+dependencies = [
+    "networkx>=3.2",
+    "matplotlib>=3.7",
+]
+
+[project.optional-dependencies]
+# Рендер анімацій у .mp4 без системного ffmpeg (pip install -e ".[video]").
+video = ["imageio-ffmpeg>=0.4"]
+
+[project.urls]
+Repository = "https://github.com/MarynaShavlak/algo-krustal-mst"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]

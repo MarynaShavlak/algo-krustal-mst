@@ -1,0 +1,4 @@
+# Не враховувати Jupyter-ноутбуки в статистиці мов GitHub Linguist,
+# щоб мовою репозиторію визначався Python.
+*.ipynb linguist-documentation
+notebooks/* linguist-documentation
