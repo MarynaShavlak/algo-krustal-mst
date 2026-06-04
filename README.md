@@ -1,11 +1,3 @@
-
-
-https://github.com/user-attachments/assets/cb937d19-4ffb-4d70-98b3-7e4a16788492
-
-
-
-https://github.com/user-attachments/assets/72fa1061-525f-416d-85db-d8ef76ad1256
-
 # 🌳 Алгоритм Краскала: мінімальне остовне дерево
 
 **Мінімальне остовне дерево (МОД, *Minimum Spanning Tree*)** — це підмножина ребер
