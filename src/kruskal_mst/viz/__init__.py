@@ -8,7 +8,7 @@ from .palette import (
 from .graph_plot import draw_graph
 from .dsu_forest import draw_dsu_forest
 from .code_panel import CODE, draw_code, draw_sorted_list, LEGEND_HANDLES
-from .steps import build_steps, render_step, step_figures
+from .steps import build_steps, render_step, step_figures, dsu_steps_grid
 from .grid import steps_grid
 from .cut import cut_property
 from .exchange import exchange_argument
@@ -26,7 +26,7 @@ from .dsu_step8_anim import build_dsu_step8_animation
 __all__ = [
     "draw_graph", "draw_dsu_forest",
     "CODE", "draw_code", "draw_sorted_list", "LEGEND_HANDLES",
-    "build_steps", "render_step", "step_figures",
+    "build_steps", "render_step", "step_figures", "dsu_steps_grid",
     "steps_grid", "cut_property", "exchange_argument",
     "run_benchmark", "plot_benchmark", "compare_has_path_vs_dsu",
     "spanning_tree_example", "connected_components_example", "bc_cycle_step8",

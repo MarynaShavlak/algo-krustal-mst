@@ -32,7 +32,7 @@ except Exception:
 
 from kruskal_mst import build_graph, kruskal_mst                      # noqa: E402
 from kruskal_mst.viz import (                                         # noqa: E402
-    draw_graph, draw_dsu_forest, build_steps, render_step,
+    draw_graph, draw_dsu_forest, build_steps, dsu_steps_grid,
     steps_grid, cut_property, exchange_argument, run_benchmark, plot_benchmark,
     compare_has_path_vs_dsu, spanning_tree_example,
     connected_components_example, bc_cycle_step8, chain_vs_flat, has_path_steps_grid,
@@ -81,13 +81,12 @@ def main():
     # 2) усі кроки на одній сітці
     save(steps_grid(G), "steps_grid.png")
 
-    # 3) репрезентативний тривопанельний крок — цикл B–C
-    steps = build_steps(G)
-    cyc_k, cyc_step = next((k, s) for k, s in enumerate(steps, 1)
-                           if s["kind"] == "edge" and not s["accepted"])
-    save(render_step(cyc_step, cyc_k, G), "dsu_3panel_cycle.png")
+    # 3) усі кроки DSU-версії: [код | граф | структура DSU] + підсумок (§15)
+    save(dsu_steps_grid(G), "dsu_steps.png")
 
-    # 4) структура DSU перед кроком 8 (стан тієї ж комірки циклу)
+    # 4) структура DSU на кроці перевірки циклу B–C (та сама комірка)
+    steps = build_steps(G)
+    cyc_step = next(s for s in steps if s["kind"] == "edge" and not s["accepted"])
     fig, ax = plt.subplots(figsize=(7.5, 5.0))
     draw_dsu_forest(ax, cyc_step["parent"], cyc_step["rank"],
                     highlight={cyc_step["u"], cyc_step["v"]})

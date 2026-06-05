@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import matplotlib.pyplot as plt
 
-from .palette import HL_ACTIVE, HL_ADD, HL_SKIP
+from .palette import HL_ACTIVE, HL_ADD, HL_SKIP, C_MST
 from .graph_plot import draw_graph
 from .dsu_forest import draw_dsu_forest
 from .code_panel import draw_code, draw_sorted_list, LEGEND_HANDLES
@@ -109,3 +109,83 @@ def step_figures(G):
     for k, step in enumerate(steps, 1):
         out.append((f"step_{k:02d}_{step['kind']}", render_step(step, k, G)))
     return out
+
+
+def _draw_result_list(ax, mst, total):
+    """Список ребер готового МОД + сумарна вага (для підсумкового рядка гріда)."""
+    ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
+    ax.text(0.0, 0.99, "Ребра мінімального остовного дерева:", fontsize=10.5,
+            fontweight="bold", va="top", color="#15384A")
+    n = len(mst)
+    top, bottom = 0.84, 0.24
+    line_h = (top - bottom) / (n - 1) if n > 1 else 0
+    for i, (u, v, w) in enumerate(mst):
+        y = top - i * line_h
+        ax.text(0.06, y, f"{u}–{v}", family="monospace", fontsize=11, va="center",
+                fontweight="bold", color=C_MST)
+        ax.text(0.30, y, f"вага {w}", family="monospace", fontsize=10.5, va="center", color="#444")
+    ax.text(0.06, 0.10, f"Разом: {n} ребер,  сумарна вага = {total}",
+            fontsize=10.5, fontweight="bold", va="center", color="#15384A")
+
+
+def dsu_steps_grid(G):
+    """Усі кроки DSU-версії + підсумок в одному зображенні: рядок = [код | граф | структура DSU].
+
+    Грід-аналог окремих панелей ``render_step`` (як ``has_path_steps_grid`` для §6), з легендою
+    під кожним кроком і підсумковим рядком ``[список ребер МОД | готове дерево]``.
+    """
+    steps = build_steps(G)
+    nrow = len(steps) + 1   # кроки + підсумковий рядок
+    fig, axes = plt.subplots(nrow, 3, figsize=(15.6, 4.3 * nrow),
+                             gridspec_kw={"width_ratios": [1.05, 0.95, 1.0]})
+
+    def row_legend(ax):
+        ax.legend(handles=LEGEND_HANDLES, loc="upper center", bbox_to_anchor=(0.5, -0.04),
+                  ncol=3, fontsize=8, frameon=False,
+                  handlelength=1.5, columnspacing=1.1, handletextpad=0.4)
+
+    for i, step in enumerate(steps):
+        axc, axg, axd = axes[i]
+        draw_code(axc, step["hl"])
+        if step["kind"] == "sort":
+            draw_sorted_list(axg, step["order"])
+            axd.set_axis_off()
+            axc.set_title("Крок 2 — сортування ребер за вагою", fontsize=11, fontweight="bold", loc="left")
+            continue
+        if step["kind"] == "init":
+            draw_graph(G, axg, comp=step["comp"])
+            draw_dsu_forest(axd, step["parent"], step["rank"])
+            axc.set_title("Крок 1 — ініціалізація: DSU + порожнє МОД", fontsize=11, fontweight="bold", loc="left")
+            axg.set_title("Граф: 7 окремих компонент", fontsize=10, color="#333")
+            axd.set_title("Структура DSU: 7 окремих коренів", fontsize=10, color="#333")
+        else:
+            mst_set = {tuple(sorted((a, b))) for a, b, _ in step["mst"]}
+            draw_graph(G, axg, mst_set=mst_set, consider=(step["u"], step["v"]),
+                       consider_ok=step["accepted"], comp=step["comp"])
+            draw_dsu_forest(axd, step["parent"], step["rank"],
+                            highlight={step["u"], step["v"]}, new_link=step["new_link"])
+            verdict = ("ДОДАЄМО (union → різні множини)" if step["accepted"]
+                       else "ПРОПУСКАЄМО (union → цикл)")
+            axc.set_title(f"Крок {i + 1} — ребро {step['u']}–{step['v']} (вага {step['w']}): {verdict}",
+                          fontsize=10.5, fontweight="bold", loc="left")
+            axg.set_title(f"dsu.union('{step['u']}','{step['v']}') = {step['accepted']}",
+                          fontsize=10, color="#333")
+            axd.set_title("Структура DSU: підвішуємо корінь під корінь" if step["accepted"]
+                          else "Структура DSU: u і v вже в одному дереві → цикл",
+                          fontsize=10, color="#333")
+        row_legend(axg)
+
+    # підсумковий рядок: список ребер МОД | готове дерево
+    axl, axt, axe = axes[-1]
+    final = steps[-1]["mst"]
+    total = sum(w for _, _, w in final)
+    _draw_result_list(axl, final, total)
+    draw_graph(G, axt, mst_set={tuple(sorted((a, b))) for a, b, _ in final}, comp=steps[-1]["comp"])
+    axe.set_axis_off()
+    axl.set_title("Підсумок", fontsize=11, fontweight="bold", loc="left")
+    axt.set_title(f"Готове МОД (сумарна вага = {total})", fontsize=10, color="#333")
+    row_legend(axt)
+
+    fig.suptitle("Покроково DSU-версія: код | граф | структура DSU", fontsize=14, fontweight="bold", y=0.997)
+    fig.tight_layout(rect=[0, 0.005, 1, 0.985], h_pad=6.0)
+    return fig
