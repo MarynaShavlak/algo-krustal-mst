@@ -14,6 +14,11 @@ from .cut import cut_property
 from .exchange import exchange_argument
 from .benchmark import run_benchmark, plot_benchmark
 from .compare import compare_has_path_vs_dsu
+from .tree_example import spanning_tree_example
+from .components_example import connected_components_example
+from .bc_cycle import bc_cycle_step8
+from .chain_vs_flat import chain_vs_flat
+from .has_path_steps import has_path_steps_grid
 from .dsu_anim import build_dsu_build_animation
 from .bfs_anim import build_bfs_found_animation, build_bfs_notfound_animation
 from .dsu_step8_anim import build_dsu_step8_animation
@@ -24,6 +29,8 @@ __all__ = [
     "build_steps", "render_step", "step_figures",
     "steps_grid", "cut_property", "exchange_argument",
     "run_benchmark", "plot_benchmark", "compare_has_path_vs_dsu",
+    "spanning_tree_example", "connected_components_example", "bc_cycle_step8",
+    "chain_vs_flat", "has_path_steps_grid",
     "build_dsu_build_animation", "build_bfs_found_animation",
     "build_bfs_notfound_animation", "build_dsu_step8_animation",
 ]

@@ -34,7 +34,8 @@ from kruskal_mst import build_graph, kruskal_mst                      # noqa: E4
 from kruskal_mst.viz import (                                         # noqa: E402
     draw_graph, draw_dsu_forest, build_steps, render_step,
     steps_grid, cut_property, exchange_argument, run_benchmark, plot_benchmark,
-    compare_has_path_vs_dsu,
+    compare_has_path_vs_dsu, spanning_tree_example,
+    connected_components_example, bc_cycle_step8, chain_vs_flat, has_path_steps_grid,
     build_dsu_build_animation, build_bfs_found_animation,
     build_bfs_notfound_animation, build_dsu_step8_animation,
 )
@@ -74,6 +75,9 @@ def main():
     fig.tight_layout()
     save(fig, "graph.png")
 
+    # 1b) приклад до §1: граф із циклами + одне з його остовних дерев
+    save(spanning_tree_example(), "spanning_tree_example.png")
+
     # 2) усі кроки на одній сітці
     save(steps_grid(G), "steps_grid.png")
 
@@ -111,6 +115,12 @@ def main():
 
     # 8b) порівняння has_path vs DSU на одному кроці (§10)
     save(compare_has_path_vs_dsu(G), "compare_step8.png")
+
+    # 8c) додаткові схеми з ноутбука
+    save(connected_components_example(), "components_example.png")  # §2 — 3 компоненти
+    save(has_path_steps_grid(G), "has_path_steps.png")             # §6 — 13 панелей [код|граф]
+    save(bc_cycle_step8(G), "bc_cycle_step8.png")                  # §6 — цикл B→E→C→B
+    save(chain_vs_flat(), "chain_vs_flat.png")                     # §7 — ланцюг vs пласке
 
     # 9) анімації — GIF (працюють усюди, без контролерів) + MP4 (відео з контролерами
     #    на GitHub; потрібен ffmpeg). Кожна — окремий файл images/<name>.{gif,mp4}.
