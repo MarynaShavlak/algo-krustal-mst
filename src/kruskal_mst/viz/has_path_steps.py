@@ -121,10 +121,14 @@ def has_path_steps_grid(G, pos=POS):
                 sub += f"   |  дерево готове: {need} ребер"
             axr.set_title(sub, fontsize=9.5, color="#333")
 
+        # легенда під кожним кроком (крім сортування) — як у ноутбуці
+        if step["kind"] != "sort":
+            axr.legend(handles=LEGEND_HANDLES, loc="upper center", bbox_to_anchor=(0.5, -0.03),
+                       ncol=2, fontsize=8, frameon=False,
+                       handlelength=1.6, columnspacing=1.4, handletextpad=0.4)
+
     fig.suptitle("Покроково: код (підсвічено активні рядки) | граф (компоненти кольором)",
-                 fontsize=14, fontweight="bold")
-    fig.legend(handles=LEGEND_HANDLES, loc="lower center", ncol=4, fontsize=9, frameon=False,
-               handlelength=1.8, columnspacing=1.6, handletextpad=0.5)
-    # h_pad — більший вертикальний відступ між рядками-кроками (щоб панелі не злипалися)
-    fig.tight_layout(rect=[0, 0.01, 1, 0.985], h_pad=4.0)
+                 fontsize=14, fontweight="bold", y=0.997)
+    # відступ між рядками-кроками (щоб панелі й легенди не злипалися)
+    fig.tight_layout(rect=[0, 0.005, 1, 0.985], h_pad=6.0)
     return fig
