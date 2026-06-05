@@ -9,10 +9,8 @@
 """
 
 from .dsu import DSU
-from .graph import build_graph, EDGES, POS, POS_DSU, POS_CUT, POS_EX
-from .kruskal import (
-    kruskal_mst, kruskal_dsu, kruskal_naive, kruskal_logged, random_connected,
-)
+from .graph import build_graph, random_connected, EDGES, POS, POS_DSU, POS_CUT, POS_EX
+from .kruskal import kruskal_mst, kruskal_dsu, kruskal_naive, kruskal_logged
 
 __version__ = "1.0.0"
 

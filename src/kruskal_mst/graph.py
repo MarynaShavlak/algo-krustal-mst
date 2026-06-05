@@ -5,10 +5,13 @@
 7 вершин (A..G) і 11 зважених ребер. Фіксовані координати ``POS`` тримають
 вигляд графа однаковим на всіх схемах. Окремі розкладки потрібні для двох
 схем-ілюстрацій: дерева вказівників DSU (``POS_DSU``) та доведення коректності
-(``POS_CUT``, ``POS_EX``).
+(``POS_CUT``, ``POS_EX``). ``random_connected`` генерує випадкові зв'язні зважені
+графи для бенчмарку.
 """
 
 from __future__ import annotations
+
+import random
 
 import networkx as nx
 
@@ -25,6 +28,22 @@ def build_graph() -> nx.Graph:
     G = nx.Graph()
     for u, v, w in EDGES:
         G.add_edge(u, v, weight=w)
+    return G
+
+
+def random_connected(n: int, seed: int) -> nx.Graph:
+    """Випадковий зв'язний зважений граф: кістяк-дерево + ~n додаткових ребер (для бенчмарку)."""
+    rng = random.Random(seed)
+    G = nx.random_labeled_tree(n, seed=seed)   # дерево => гарантована зв'язність
+    nodes = list(G.nodes())
+    added = 0
+    while added < n:
+        u, v = rng.sample(nodes, 2)
+        if not G.has_edge(u, v):
+            G.add_edge(u, v)
+            added += 1
+    for u, v in G.edges():
+        G[u][v]["weight"] = rng.randint(1, 100)
     return G
 
 

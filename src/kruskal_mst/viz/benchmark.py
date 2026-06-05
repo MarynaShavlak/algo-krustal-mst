@@ -7,7 +7,8 @@ import time
 
 import matplotlib.pyplot as plt
 
-from ..kruskal import kruskal_dsu, kruskal_naive, random_connected
+from ..kruskal import kruskal_dsu, kruskal_naive
+from ..graph import random_connected
 
 from .core.palette import C_MST, C_REJECT
 

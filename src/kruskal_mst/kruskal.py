@@ -5,12 +5,10 @@
 * ``kruskal_dsu``    — те саме, але повертає лише вагу (для бенчмарку).
 * ``kruskal_naive``  — варіант через ``nx.has_path`` (перевірка циклу обходом графа).
 * ``kruskal_logged`` — як ``kruskal_mst``, але веде покроковий журнал для візуалізації.
-* ``random_connected`` — генератор випадкових зв'язних зважених графів.
 """
 
 from __future__ import annotations
 
-import random
 from typing import List, Tuple
 
 import networkx as nx
@@ -90,19 +88,3 @@ def kruskal_logged(G: nx.Graph) -> Tuple[List[Edge], int, list]:
             "comp_after": {n: dsu.find(n) for n in nodes},
         })
     return mst_edges, total, steps
-
-
-def random_connected(n: int, seed: int) -> nx.Graph:
-    """Випадковий зв'язний зважений граф: кістяк-дерево + ~n додаткових ребер."""
-    rng = random.Random(seed)
-    G = nx.random_labeled_tree(n, seed=seed)   # дерево => гарантована зв'язність
-    nodes = list(G.nodes())
-    added = 0
-    while added < n:
-        u, v = rng.sample(nodes, 2)
-        if not G.has_edge(u, v):
-            G.add_edge(u, v)
-            added += 1
-    for u, v in G.edges():
-        G[u][v]["weight"] = rng.randint(1, 100)
-    return G
