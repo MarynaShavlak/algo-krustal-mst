@@ -1284,25 +1284,6 @@ python scripts/generate_images.py  # тепер створює й images/*.mp4
 > `brew install ffmpeg` (macOS) / `conda install -c conda-forge ffmpeg`. Скрипт сам
 > підхопить будь-який доступний ffmpeg.
 
-**Як вставити відео в README** (дає play / паузу / перемотку): на github.com відкрий
-README у режимі ✏️ Edit і **перетягни** потрібний `images/<name>.mp4` у текст — GitHub
-завантажить його й підставить рядок-плеєр (інструкції є в коментарях біля кожної анімації).
-
-Швидкий приклад використання пакета:
-
-```python
-from kruskal_mst import build_graph, kruskal_mst
-
-G = build_graph()
-mst, total = kruskal_mst(G)
-print(total)        # 39
-for u, v, w in mst:
-    print(u, v, w)
-```
-
-Повний навчальний розбір із **анімаціями** (побудова DSU, BFS усередині `has_path`,
-покрокові панелі) — у [ноутбуці](notebooks/kruskal_mst_idea.ipynb).
-
 ---
 
 ## Автор
