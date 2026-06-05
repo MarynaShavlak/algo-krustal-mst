@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import networkx as nx
 
-from ..graph import POS_EX
-from .palette import C_NODE, C_NODE_EDGE, CHIP
+from ...graph import POS_EX
+from ..core.palette import C_NODE, C_NODE_EDGE, CHIP
 
 C_FAINT = "#DBDBDB"
 C_TREE = "#2E8B57"       # ребро дерева

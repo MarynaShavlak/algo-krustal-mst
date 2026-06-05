@@ -13,12 +13,12 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import networkx as nx
 
-from ..graph import POS
-from .palette import (
+from ...graph import POS
+from ..core.palette import (
     C_NODE_EDGE, C_MST, C_REJECT, C_CONSIDER, COMP_PALETTE,
     HL_ACTIVE, HL_ADD, HL_SKIP, C_PANEL_EDGE,
 )
-from .code_panel import CODE_HAS_PATH, draw_code, draw_sorted_list
+from ..core.code_panel import CODE_HAS_PATH, draw_code, draw_sorted_list
 
 LEGEND_HANDLES = [
     Line2D([0], [0], color=C_PANEL_EDGE, lw=2.4, label="ребро графа (кандидат, не в МОД)"),

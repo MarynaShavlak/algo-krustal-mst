@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import networkx as nx
 
-from ..graph import POS
-from .palette import C_NODE, C_NODE_EDGE, C_MST, C_REJECT, C_CONSIDER, C_PANEL_EDGE
+from ...graph import POS
+from ..core.palette import C_NODE, C_NODE_EDGE, C_MST, C_REJECT, C_CONSIDER, C_PANEL_EDGE
 
 
 def bc_cycle_step8(G, pos=POS):

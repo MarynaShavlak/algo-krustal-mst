@@ -6,9 +6,9 @@ from __future__ import annotations
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 
-from .palette import C_NODE, C_NODE_EDGE, C_MST, C_CONSIDER, C_REJECT
-from .graph_plot import draw_graph
-from ..kruskal import kruskal_logged
+from ..core.palette import C_NODE, C_NODE_EDGE, C_MST, C_CONSIDER, C_REJECT
+from ..core.graph_plot import draw_graph
+from ...kruskal import kruskal_logged
 
 
 def steps_grid(G, cols=3):

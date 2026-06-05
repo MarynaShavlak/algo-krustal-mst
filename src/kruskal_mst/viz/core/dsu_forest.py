@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import networkx as nx
 
-from ..graph import POS_DSU
+from ...graph import POS_DSU
 from .palette import C_NODE, C_NODE_EDGE, C_CONSIDER, ROOT_BORDER, A_DSU
 
 

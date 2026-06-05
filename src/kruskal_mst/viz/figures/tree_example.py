@@ -11,7 +11,7 @@ from __future__ import annotations
 import matplotlib.pyplot as plt
 import networkx as nx
 
-from .palette import C_NODE, C_NODE_EDGE, C_BASE_EDGE, C_MST, A_DSU
+from ..core.palette import C_NODE, C_NODE_EDGE, C_BASE_EDGE, C_MST, A_DSU
 
 
 def spanning_tree_example():

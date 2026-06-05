@@ -6,7 +6,7 @@ from __future__ import annotations
 import matplotlib.pyplot as plt
 import networkx as nx
 
-from .palette import C_NODE, C_NODE_EDGE, C_MST
+from ..core.palette import C_NODE, C_NODE_EDGE, C_MST
 
 C_ARROW = "#777"   # стрілки вказівників (темно-сірі саме для цієї схеми)
 

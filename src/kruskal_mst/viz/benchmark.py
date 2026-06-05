@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 from ..kruskal import kruskal_dsu, kruskal_naive, random_connected
 
-from .palette import C_MST, C_REJECT
+from .core.palette import C_MST, C_REJECT
 
 
 def run_benchmark(sizes=(50, 100, 200, 400, 600), seed=123, check=True):

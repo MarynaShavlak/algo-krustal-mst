@@ -6,7 +6,7 @@ from __future__ import annotations
 import matplotlib.pyplot as plt
 import networkx as nx
 
-from .palette import C_NODE_EDGE, A_DSU
+from ..core.palette import C_NODE_EDGE, A_DSU
 
 # власна послідовність кольорів компонент (інший порядок, ніж COMP_PALETTE,
 # щоб три острівці пофарбувались саме як у ноутбуці)

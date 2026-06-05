@@ -10,8 +10,8 @@ from __future__ import annotations
 import matplotlib.pyplot as plt
 import networkx as nx
 
-from ..graph import POS
-from .palette import C_NODE, C_NODE_EDGE, C_MST, C_CONSIDER, C_VISIT, C_FAINT_DOT
+from ...graph import POS
+from ..core.palette import C_NODE, C_NODE_EDGE, C_MST, C_CONSIDER, C_VISIT, C_FAINT_DOT
 
 C_FOREST = "#444"   # ребра лісу (по них іде BFS)
 C_ARROW = "#888"    # стрілки вказівників DSU

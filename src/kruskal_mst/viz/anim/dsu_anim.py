@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 from matplotlib.animation import FuncAnimation
 
-from .palette import (
+from ..core.palette import (
     C_NODE, C_NODE_EDGE, C_MST, C_CONSIDER, ROOT_BORDER, FOUND_BORDER, A_DSU, A_HI,
 )
 

@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 import networkx as nx
 
-from ..graph import POS_CUT
-from .palette import C_NODE, C_NODE_EDGE, CHIP
+from ...graph import POS_CUT
+from ..core.palette import C_NODE, C_NODE_EDGE, CHIP
 
 # локальні кольори саме для цієї схеми
 C_S = "#A8D8EA"          # група A (над розрізом)

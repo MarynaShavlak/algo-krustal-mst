@@ -13,8 +13,8 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 from matplotlib.animation import FuncAnimation
 
-from ..graph import POS_DSU
-from .palette import (
+from ...graph import POS_DSU
+from ..core.palette import (
     C_NODE, C_NODE_EDGE, C_MST, C_CONSIDER, ROOT_BORDER, FOUND_BORDER, A_DSU, A_HI,
 )
 

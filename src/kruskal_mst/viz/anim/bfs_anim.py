@@ -14,8 +14,8 @@ from matplotlib.patches import Patch
 from matplotlib.animation import FuncAnimation
 import networkx as nx
 
-from ..graph import build_graph, POS
-from .palette import (
+from ...graph import build_graph, POS
+from ..core.palette import (
     C_NODE, C_NODE_EDGE, C_MST, C_REJECT, C_CONSIDER, S_QUEUE, S_DONE, E_BASE, E_FAINT, A_HI,
 )
 

@@ -10,11 +10,11 @@ from __future__ import annotations
 
 import matplotlib.pyplot as plt
 
-from .palette import HL_ACTIVE, HL_ADD, HL_SKIP, C_MST
-from .graph_plot import draw_graph
-from .dsu_forest import draw_dsu_forest
-from .code_panel import draw_code, draw_sorted_list, LEGEND_HANDLES
-from ..dsu import DSU
+from ..core.palette import HL_ACTIVE, HL_ADD, HL_SKIP, C_MST
+from ..core.graph_plot import draw_graph
+from ..core.dsu_forest import draw_dsu_forest
+from ..core.code_panel import draw_code, draw_sorted_list, LEGEND_HANDLES
+from ...dsu import DSU
 
 
 def _root_of(parent, x):
