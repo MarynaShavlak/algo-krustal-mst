@@ -13,11 +13,11 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 from matplotlib.animation import FuncAnimation
 
-# Кольори станів вузлів і стрілок
-S_NODE = "#A8D8EA"; S_CUR = "#F4A300"; S_FOUND = "#2E8B57"
-ROOT_BORDER = "#C8860D"; NODE_BORDER = "#2C6E8F"; FOUND_BORDER = "#1E5E3A"
-A_NORMAL = "#9AA0A6"; A_HI = "#F08A00"; A_COMP = "#2E8B57"
+from .palette import (
+    C_NODE, C_NODE_EDGE, C_MST, C_CONSIDER, ROOT_BORDER, FOUND_BORDER, A_DSU, A_HI,
+)
 
+# Власна (5-вузлова) розкладка саме для цієї анімації
 POS = {"A": (2.0, 3.0), "B": (0.5, 1.6), "C": (2.0, 1.6), "E": (3.5, 1.6), "D": (3.1, 0.4)}
 NODES = ["A", "B", "C", "D", "E"]
 P_BUILT = {"A": "A", "B": "A", "C": "A", "D": "C", "E": "A"}   # стан після всіх union (D→C→A)
@@ -57,19 +57,19 @@ def _draw_state(ax, i):
     for n in NODES:
         is_root = parent[n] == n
         if st.get("found") == n:
-            face.append(S_FOUND); edge.append(FOUND_BORDER); lw.append(2.6)
+            face.append(C_MST); edge.append(FOUND_BORDER); lw.append(2.6)
         elif st.get("current") == n:
-            face.append(S_CUR); edge.append(NODE_BORDER); lw.append(2.2)
+            face.append(C_CONSIDER); edge.append(C_NODE_EDGE); lw.append(2.2)
         else:
-            face.append(S_NODE); edge.append(ROOT_BORDER if is_root else NODE_BORDER)
+            face.append(C_NODE); edge.append(ROOT_BORDER if is_root else C_NODE_EDGE)
             lw.append(2.6 if is_root else 1.6)
 
     special, scol = None, None
     if st.get("new"):   special, scol = st["new"], A_HI
     if st.get("climb"): special, scol = st["climb"], A_HI
-    if st.get("comp"):  special, scol = st["comp"], A_COMP
+    if st.get("comp"):  special, scol = st["comp"], C_MST
     normal = [e for e in D.edges() if e != special]
-    nx.draw_networkx_edges(D, POS, ax=ax, edgelist=normal, edge_color=A_NORMAL, width=1.8,
+    nx.draw_networkx_edges(D, POS, ax=ax, edgelist=normal, edge_color=A_DSU, width=1.8,
                            arrows=True, arrowstyle="-|>", arrowsize=20, node_size=1100,
                            min_source_margin=16, min_target_margin=18)
     if special and special in D.edges():
@@ -90,10 +90,10 @@ def _draw_state(ax, i):
 
     ax.set_title(f"Крок {i + 1}/{len(STATES)}:  {st['desc']}", fontsize=10.5)
     ax.set_xlim(-0.6, 4.4); ax.set_ylim(-0.4, 3.9); ax.set_axis_off()
-    handles = [Patch(facecolor=S_NODE, edgecolor=ROOT_BORDER, linewidth=2, label="корінь (сам собі батько)"),
-               Patch(facecolor=S_NODE, edgecolor=NODE_BORDER, label="звичайний вузол"),
-               Patch(facecolor=S_CUR, edgecolor=NODE_BORDER, label="де ми зараз (find)"),
-               Patch(facecolor=S_FOUND, edgecolor=FOUND_BORDER, label="знайдений корінь")]
+    handles = [Patch(facecolor=C_NODE, edgecolor=ROOT_BORDER, linewidth=2, label="корінь (сам собі батько)"),
+               Patch(facecolor=C_NODE, edgecolor=C_NODE_EDGE, label="звичайний вузол"),
+               Patch(facecolor=C_CONSIDER, edgecolor=C_NODE_EDGE, label="де ми зараз (find)"),
+               Patch(facecolor=C_MST, edgecolor=FOUND_BORDER, label="знайдений корінь")]
     ax.legend(handles=handles, loc="upper left", fontsize=8, frameon=False, bbox_to_anchor=(-0.02, 1.0))
 
 

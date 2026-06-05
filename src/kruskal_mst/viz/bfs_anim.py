@@ -9,30 +9,26 @@
 
 from __future__ import annotations
 
-import networkx as nx
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 from matplotlib.animation import FuncAnimation
+import networkx as nx
+
+from ..graph import build_graph, POS
+from .palette import (
+    C_NODE, C_NODE_EDGE, C_MST, C_REJECT, C_CONSIDER, S_QUEUE, S_DONE, E_BASE, E_FAINT, A_HI,
+)
 
 # Спільний граф і ліс (ребра, вже додані до МОД перед кроком 8)
-G = nx.Graph()
-for u, v, w in [("A", "B", 7), ("A", "D", 5), ("B", "C", 8), ("B", "D", 9), ("B", "E", 7),
-                ("C", "E", 5), ("D", "E", 15), ("D", "F", 6), ("E", "F", 8), ("E", "G", 9), ("F", "G", 11)]:
-    G.add_edge(u, v, weight=w)
+G = build_graph()
 FOREST_EDGES = [("A", "D"), ("C", "E"), ("D", "F"), ("A", "B"), ("B", "E")]   # ребра, вже у МОД
-POS = {"A": (5.0, 2.0), "B": (3.0, 2.6), "C": (1.4, 4.0), "D": (3.0, 1.0),
-       "E": (0.6, 1.5), "F": (1.6, -0.6), "G": (-1.1, -0.6)}
 norm = lambda e: tuple(sorted(e))
 fset = {norm(e) for e in FOREST_EDGES}
 non_forest = [(u, v) for u, v in G.edges() if norm((u, v)) not in fset]
-C_NODE_EDGE = "#2C6E8F"
 
 
 def build_bfs_found_animation():
     """BFS від B шукає C — шлях знайдено (ребро B–C дало б цикл)."""
-    S_NEW = "#A8D8EA"; S_QUEUE = "#FCE08A"; S_CUR = "#F4A300"; S_DONE = "#D5DBDE"; S_FOUND = "#2E8B57"
-    E_BASE = "#C7CCD0"; E_TRAV = "#F08A00"; E_CONS = "#E63946"; E_FAINT = "#EDEFF1"
-
     # Кадри BFS від B у пошуках C
     frames = [
         dict(desc="Старт: кладемо стартову вершину B у чергу. Ціль — дістатися C.",
@@ -61,7 +57,7 @@ def build_bfs_found_animation():
              trav={norm(("A", "B")), norm(("B", "E")), norm(("A", "D")), norm(("C", "E"))},
              cons=[], queue=[], path=[norm(("B", "E")), norm(("C", "E"))]),
     ]
-    NODE_COL = {"new": S_NEW, "queue": S_QUEUE, "cur": S_CUR, "done": S_DONE, "found": S_FOUND}
+    NODE_COL = {"new": C_NODE, "queue": S_QUEUE, "cur": C_CONSIDER, "done": S_DONE, "found": C_MST}
 
     def draw_frame(ax, i):
         ax.clear()
@@ -75,13 +71,13 @@ def build_bfs_found_animation():
         base = [(u, v) for u, v in G.edges() if norm((u, v)) in fset and norm((u, v)) not in trav and norm((u, v)) not in cons]
         tr = [(u, v) for u, v in G.edges() if norm((u, v)) in trav and norm((u, v)) not in path]
         nx.draw_networkx_edges(G, POS, ax=ax, edgelist=base, edge_color=E_BASE, width=1.8)
-        nx.draw_networkx_edges(G, POS, ax=ax, edgelist=tr, edge_color=E_TRAV, width=3.0)
+        nx.draw_networkx_edges(G, POS, ax=ax, edgelist=tr, edge_color=A_HI, width=3.0)
         if path:
             pe = [(u, v) for u, v in G.edges() if norm((u, v)) in path]
-            nx.draw_networkx_edges(G, POS, ax=ax, edgelist=pe, edge_color=E_TRAV, width=5.0)
+            nx.draw_networkx_edges(G, POS, ax=ax, edgelist=pe, edge_color=A_HI, width=5.0)
         if cons:
             ce = [(u, v) for u, v in G.edges() if norm((u, v)) in cons]
-            nx.draw_networkx_edges(G, POS, ax=ax, edgelist=ce, edge_color=E_CONS, width=3.0, style="dashed")
+            nx.draw_networkx_edges(G, POS, ax=ax, edgelist=ce, edge_color=C_REJECT, width=3.0, style="dashed")
 
         nx.draw_networkx_nodes(G, POS, ax=ax, node_size=900, node_color=colors,
                                edgecolors=C_NODE_EDGE, linewidths=1.8)
@@ -94,11 +90,11 @@ def build_bfs_found_animation():
         ax.text(0.5, -0.05, f"Черга (наступні до обробки): [ {q} ]",
                 transform=ax.transAxes, ha="center", va="top", fontsize=10, color="#333")
         ax.set_axis_off(); ax.margins(0.14)
-        handles = [Patch(facecolor=S_NEW, edgecolor=C_NODE_EDGE, label="ще не відвідано"),
+        handles = [Patch(facecolor=C_NODE, edgecolor=C_NODE_EDGE, label="ще не відвідано"),
                    Patch(facecolor=S_QUEUE, edgecolor=C_NODE_EDGE, label="у черзі"),
-                   Patch(facecolor=S_CUR, edgecolor=C_NODE_EDGE, label="обробляємо зараз"),
+                   Patch(facecolor=C_CONSIDER, edgecolor=C_NODE_EDGE, label="обробляємо зараз"),
                    Patch(facecolor=S_DONE, edgecolor=C_NODE_EDGE, label="відвідано"),
-                   Patch(facecolor=S_FOUND, edgecolor=C_NODE_EDGE, label="знайдено ціль")]
+                   Patch(facecolor=C_MST, edgecolor=C_NODE_EDGE, label="знайдено ціль")]
         ax.legend(handles=handles, loc="upper left", fontsize=8.5, frameon=False, bbox_to_anchor=(-0.02, 1.02))
 
     fig, ax = plt.subplots(figsize=(7.5, 5.6))
@@ -109,8 +105,6 @@ def build_bfs_found_animation():
 
 def build_bfs_notfound_animation():
     """BFS від E шукає G — ціль недосяжна (ребро E–G безпечно додати)."""
-    S_NEW = "#A8D8EA"; S_QUEUE = "#FCE08A"; S_CUR = "#F4A300"; S_DONE = "#D5DBDE"
-    E_BASE = "#C7CCD0"; E_TRAV = "#F08A00"; E_FAINT = "#EDEFF1"; E_ADD = "#2E8B57"
     EC, EB, BA, AD, DF = norm(("C", "E")), norm(("B", "E")), norm(("A", "B")), norm(("A", "D")), norm(("D", "F"))
 
     # Кадри BFS від E у пошуках G (якого немає в цій компоненті)
@@ -132,7 +126,7 @@ def build_bfs_notfound_animation():
         dict(desc="Черга порожня, G так і не знайдено → шляху немає.\nРізні компоненти → ребро E–G ДОДАЄМО.",
              state={"E": "done", "C": "done", "B": "done", "A": "done", "D": "done", "F": "done"}, trav={EC, EB, BA, AD, DF}, queue=[], added=[("E", "G")]),
     ]
-    NODE_COL = {"new": S_NEW, "queue": S_QUEUE, "cur": S_CUR, "done": S_DONE}
+    NODE_COL = {"new": C_NODE, "queue": S_QUEUE, "cur": C_CONSIDER, "done": S_DONE}
 
     def draw_frame(ax, i):
         ax.clear()
@@ -144,10 +138,10 @@ def build_bfs_notfound_animation():
         base = [(u, v) for u, v in G.edges() if norm((u, v)) in fset and norm((u, v)) not in trav]
         tr = [(u, v) for u, v in G.edges() if norm((u, v)) in trav]
         nx.draw_networkx_edges(G, POS, ax=ax, edgelist=base, edge_color=E_BASE, width=1.8)
-        nx.draw_networkx_edges(G, POS, ax=ax, edgelist=tr, edge_color=E_TRAV, width=3.0)
+        nx.draw_networkx_edges(G, POS, ax=ax, edgelist=tr, edge_color=A_HI, width=3.0)
         if added:
             ae = [(u, v) for u, v in G.edges() if norm((u, v)) in added]
-            nx.draw_networkx_edges(G, POS, ax=ax, edgelist=ae, edge_color=E_ADD, width=4.5)
+            nx.draw_networkx_edges(G, POS, ax=ax, edgelist=ae, edge_color=C_MST, width=4.5)
 
         nx.draw_networkx_nodes(G, POS, ax=ax, node_size=900, node_color=colors,
                                edgecolors=C_NODE_EDGE, linewidths=1.8)
@@ -160,9 +154,9 @@ def build_bfs_notfound_animation():
         ax.text(0.5, -0.05, f"Черга (наступні до обробки): [ {q} ]",
                 transform=ax.transAxes, ha="center", va="top", fontsize=10, color="#333")
         ax.set_axis_off(); ax.margins(0.14)
-        handles = [Patch(facecolor=S_NEW, edgecolor=C_NODE_EDGE, label="ще не відвідано"),
+        handles = [Patch(facecolor=C_NODE, edgecolor=C_NODE_EDGE, label="ще не відвідано"),
                    Patch(facecolor=S_QUEUE, edgecolor=C_NODE_EDGE, label="у черзі"),
-                   Patch(facecolor=S_CUR, edgecolor=C_NODE_EDGE, label="обробляємо зараз"),
+                   Patch(facecolor=C_CONSIDER, edgecolor=C_NODE_EDGE, label="обробляємо зараз"),
                    Patch(facecolor=S_DONE, edgecolor=C_NODE_EDGE, label="відвідано")]
         ax.legend(handles=handles, loc="upper left", fontsize=8.5, frameon=False, bbox_to_anchor=(-0.02, 1.02))
 

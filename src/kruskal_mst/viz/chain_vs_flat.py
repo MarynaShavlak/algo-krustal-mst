@@ -6,7 +6,9 @@ from __future__ import annotations
 import matplotlib.pyplot as plt
 import networkx as nx
 
-C_NODE = "#A8D8EA"; C_ROOT = "#2E8B57"; C_EDGE = "#2C6E8F"; C_ARROW = "#777"
+from .palette import C_NODE, C_NODE_EDGE, C_MST
+
+C_ARROW = "#777"   # стрілки вказівників (темно-сірі саме для цієї схеми)
 
 
 def _draw_forest(ax, parent, pos, root, title):
@@ -14,16 +16,16 @@ def _draw_forest(ax, parent, pos, root, title):
     for child, par in parent.items():
         if child != par:
             D.add_edge(child, par)               # стрілка: дитина -> батько
-    colors = [C_ROOT if n == root else C_NODE for n in D.nodes()]
+    colors = [C_MST if n == root else C_NODE for n in D.nodes()]
     nx.draw_networkx_nodes(D, pos, ax=ax, node_size=900, node_color=colors,
-                           edgecolors=C_EDGE, linewidths=2.0)
+                           edgecolors=C_NODE_EDGE, linewidths=2.0)
     nx.draw_networkx_labels(D, pos, ax=ax, font_size=13, font_weight="bold", font_color="#15384A")
     nx.draw_networkx_edges(D, pos, ax=ax, edge_color=C_ARROW, width=2.0,
                            arrows=True, arrowstyle="-|>", arrowsize=22,
                            node_size=900, min_source_margin=18, min_target_margin=18)
     rx, ry = pos[root]
     ax.annotate("корінь", (rx, ry), xytext=(rx + 0.55, ry + 0.15),
-                fontsize=10, color=C_ROOT, fontweight="bold")
+                fontsize=10, color=C_MST, fontweight="bold")
     # явні межі (вузли ланцюга всі при x=0 → інакше bbox «tight» розпливається)
     xs = [p[0] for p in pos.values()]; ys = [p[1] for p in pos.values()]
     ax.set_xlim(min(xs) - 0.7, max(xs) + 1.3)   # запас праворуч під підпис «корінь»

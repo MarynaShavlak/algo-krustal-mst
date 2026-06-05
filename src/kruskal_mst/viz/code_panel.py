@@ -24,14 +24,30 @@ CODE = [
     "    # else: вже разом -> цикл -> пропуск",            # 9
 ]
 
+#: Код варіанту через has_path (forest) для покрокової схеми §6.
+CODE_HAS_PATH = [
+    "forest = nx.Graph()",
+    "for node in graph.nodes():",
+    "    forest.add_node(node)",
+    "",
+    "sorted_edges = sorted(graph.edges(data=True),",
+    "                      key=lambda t: t[2]['weight'])",
+    "",
+    "for u, v, attr in sorted_edges:",
+    "    if not nx.has_path(forest, u, v):",
+    "        forest.add_edge(u, v)",
+    "        mst.add_edge(u, v, weight=attr['weight'])",
+    "    # else: u,v вже з'єднані -> цикл -> пропустити",
+]
 
-def draw_code(ax, highlights):
-    """Намалювати код ``CODE`` з підсвіченими рядками (``highlights`` = {індекс: колір})."""
+
+def draw_code(ax, highlights, code=CODE):
+    """Намалювати код ``code`` з підсвіченими рядками (``highlights`` = {індекс: колір})."""
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
-    line_h = 1.0 / len(CODE)
-    for i, line in enumerate(CODE):
+    line_h = 1.0 / len(code)
+    for i, line in enumerate(code):
         y = 1.0 - (i + 0.5) * line_h
         if i in highlights:
             ax.add_patch(Rectangle((0, y - line_h * 0.45), 1, line_h * 0.9,

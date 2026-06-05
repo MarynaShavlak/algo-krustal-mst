@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Покрокова візуалізація лекційного варіанту (forest + has_path) для §6.
+"""Покрокова візуалізація варіанту через has_path (forest) для §6.
 
 ``has_path_steps_grid(G)`` рендерить усі 13 панелей (ініціалізація, сортування і по
 одній на кожне з 11 ребер) в ОДНЕ зображення: кожен рядок — ``[код | граф]``, де ліворуч
@@ -11,54 +11,21 @@ from __future__ import annotations
 
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
-from matplotlib.patches import Rectangle
 import networkx as nx
 
 from ..graph import POS
-
-# ---------- Палітра ----------
-C_NODE_EDGE = "#2C6E8F"; C_BASE_EDGE = "#DADDE0"
-C_MST = "#2E8B57"; C_REJECT = "#E63946"; C_CONSIDER = "#F4A300"
-COMP_PALETTE = ["#A8D8EA", "#F6C9C9", "#C9E4C5", "#FCE4A6",
-                "#D7C9EC", "#F8C8DC", "#C9E9E9", "#E8D5B7"]
-HL_ACTIVE = "#FFF1A8"   # рядок виконується зараз
-HL_ADD = "#C7E9C0"      # гілка "додати ребро"
-HL_SKIP = "#F7C5C5"     # гілка "пропустити (цикл)"
+from .palette import (
+    C_NODE_EDGE, C_MST, C_REJECT, C_CONSIDER, COMP_PALETTE,
+    HL_ACTIVE, HL_ADD, HL_SKIP, C_PANEL_EDGE,
+)
+from .code_panel import CODE_HAS_PATH, draw_code, draw_sorted_list
 
 LEGEND_HANDLES = [
-    Line2D([0], [0], color=C_BASE_EDGE, lw=2.4, label="ребро графа (кандидат, не в МОД)"),
+    Line2D([0], [0], color=C_PANEL_EDGE, lw=2.4, label="ребро графа (кандидат, не в МОД)"),
     Line2D([0], [0], color=C_MST, lw=3.0, label="обране (у МОД)"),
     Line2D([0], [0], color=C_CONSIDER, lw=3.0, label="щойно додане"),
     Line2D([0], [0], color=C_REJECT, lw=3.0, ls="--", label="відкинуте (цикл)"),
 ]
-
-# Рядки коду, які підсвічуємо
-CODE = [
-    "forest = nx.Graph()",
-    "for node in graph.nodes():",
-    "    forest.add_node(node)",
-    "",
-    "sorted_edges = sorted(graph.edges(data=True),",
-    "                      key=lambda t: t[2]['weight'])",
-    "",
-    "for u, v, attr in sorted_edges:",
-    "    if not nx.has_path(forest, u, v):",
-    "        forest.add_edge(u, v)",
-    "        mst.add_edge(u, v, weight=attr['weight'])",
-    "    # else: u,v вже з'єднані -> цикл -> пропустити",
-]
-
-
-def _draw_code(ax, highlights):
-    ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
-    line_h = 1.0 / len(CODE)
-    for i, line in enumerate(CODE):
-        y = 1.0 - (i + 0.5) * line_h
-        if i in highlights:
-            ax.add_patch(Rectangle((0, y - line_h * 0.45), 1, line_h * 0.9,
-                                   facecolor=highlights[i], edgecolor="none", zorder=0))
-        ax.text(0.015, y, line, family="monospace", fontsize=10,
-                va="center", ha="left", color="#1b1b1b", zorder=2)
 
 
 def _draw_state(ax, G, pos, comp, mst_edges, consider=None, added=None, faint_only=False):
@@ -79,7 +46,7 @@ def _draw_state(ax, G, pos, comp, mst_edges, consider=None, added=None, faint_on
             mst_e.append((a, b))
         else:
             base.append((a, b))
-    nx.draw_networkx_edges(G, pos, ax=ax, edgelist=base, edge_color=C_BASE_EDGE, width=1.4)
+    nx.draw_networkx_edges(G, pos, ax=ax, edgelist=base, edge_color=C_PANEL_EDGE, width=1.4)
     if not faint_only:
         nx.draw_networkx_edges(G, pos, ax=ax, edgelist=mst_e, edge_color=C_MST, width=3.0)
         if con_e:
@@ -91,23 +58,6 @@ def _draw_state(ax, G, pos, comp, mst_edges, consider=None, added=None, faint_on
                                  font_size=9, rotate=False,
                                  bbox=dict(boxstyle="round,pad=0.12", fc="white", ec="none", alpha=0.8))
     ax.set_axis_off(); ax.margins(0.13)
-
-
-def _draw_sorted_list(ax, order):
-    ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
-    ax.text(0.0, 0.99, "Відсортовані ребра (за зростанням ваги):",
-            fontsize=10.5, fontweight="bold", va="top", color="#15384A")
-    n = len(order)
-    top, bottom = 0.86, 0.06
-    line_h = (top - bottom) / (n - 1)
-    for i, (u, v, w) in enumerate(order):
-        y = top - i * line_h
-        ax.text(0.04, y, f"{i + 1:>2}.", family="monospace", fontsize=10, va="center", color="#888")
-        ax.text(0.16, y, f"{u}–{v}", family="monospace", fontsize=10.5, va="center",
-                fontweight="bold", color="#1b1b1b")
-        ax.text(0.40, y, f"вага {w}", family="monospace", fontsize=10, va="center", color="#444")
-    ax.text(0.0, -0.02, "Далі перебираємо зверху вниз →", fontsize=8.5, style="italic",
-            va="top", color="#666")
 
 
 def _comps_of(forest):
@@ -142,15 +92,15 @@ def _build_steps(G):
 
 
 def has_path_steps_grid(G, pos=POS):
-    """Усі 13 панелей лекційного варіанту в одному зображенні: рядок = [код | граф]."""
+    """Усі 13 панелей варіанту через has_path в одному зображенні: рядок = [код | граф]."""
     steps = _build_steps(G)
     n = len(steps)
     need = G.number_of_nodes() - 1
-    fig, axes = plt.subplots(n, 2, figsize=(12, 3.0 * n),
+    fig, axes = plt.subplots(n, 2, figsize=(12, 3.7 * n),
                              gridspec_kw={"width_ratios": [1.15, 1]})
     for i, step in enumerate(steps):
         axc, axr = axes[i]
-        _draw_code(axc, step["hl"])
+        draw_code(axc, step["hl"], code=CODE_HAS_PATH)
         if step["kind"] == "init":
             _draw_state(axr, G, pos, step["comp"], step["mst"], faint_only=True)
             axc.set_title("Крок 1 — ініціалізація лісу", fontsize=11, fontweight="bold", loc="left")
@@ -158,7 +108,7 @@ def has_path_steps_grid(G, pos=POS):
                           "Сірим — ребра вхідного графа, серед яких обиратимемо.",
                           fontsize=9.5, color="#333")
         elif step["kind"] == "sort":
-            _draw_sorted_list(axr, step["order"])
+            draw_sorted_list(axr, step["order"])
             axc.set_title("Крок 2 — сортування ребер за вагою", fontsize=11, fontweight="bold", loc="left")
         else:
             _draw_state(axr, G, pos, step["comp"], step["mst"],
@@ -175,5 +125,6 @@ def has_path_steps_grid(G, pos=POS):
                  fontsize=14, fontweight="bold")
     fig.legend(handles=LEGEND_HANDLES, loc="lower center", ncol=4, fontsize=9, frameon=False,
                handlelength=1.8, columnspacing=1.6, handletextpad=0.5)
-    fig.tight_layout(rect=[0, 0.012, 1, 0.99])
+    # h_pad — більший вертикальний відступ між рядками-кроками (щоб панелі не злипалися)
+    fig.tight_layout(rect=[0, 0.01, 1, 0.985], h_pad=4.0)
     return fig

@@ -3,7 +3,7 @@
 
 * ``kruskal_mst``    — основна реалізація через DSU; повертає ребра МОД і вагу.
 * ``kruskal_dsu``    — те саме, але повертає лише вагу (для бенчмарку).
-* ``kruskal_naive``  — «лекційний» варіант із перевіркою циклу через ``nx.has_path``.
+* ``kruskal_naive``  — варіант через ``nx.has_path`` (перевірка циклу обходом графа).
 * ``kruskal_logged`` — як ``kruskal_mst``, але веде покроковий журнал для візуалізації.
 * ``random_connected`` — генератор випадкових зв'язних зважених графів.
 """
@@ -39,20 +39,15 @@ def kruskal_mst(G: nx.Graph) -> Tuple[List[Edge], int]:
 
 
 def kruskal_dsu(G: nx.Graph) -> int:
-    """Швидка реалізація через Union-Find. Повертає вагу МОД."""
-    dsu = DSU(G.nodes())
-    total, cnt, need = 0, 0, G.number_of_nodes() - 1
-    for u, v, w in sorted(G.edges(data="weight"), key=lambda e: e[2]):
-        if dsu.union(u, v):
-            total += w
-            cnt += 1
-            if cnt == need:
-                break
-    return total
+    """Швидка реалізація через Union-Find. Повертає лише вагу МОД (зручно для бенчмарку).
+
+    Це той самий алгоритм, що й ``kruskal_mst``, тож просто беремо з нього сумарну вагу.
+    """
+    return kruskal_mst(G)[1]
 
 
 def kruskal_naive(G: nx.Graph) -> int:
-    """Лекційний варіант: перевірка циклу через ``nx.has_path``. Повертає вагу МОД."""
+    """Варіант через ``nx.has_path``: перевірка циклу обходом графа. Повертає вагу МОД."""
     forest = nx.Graph()
     forest.add_nodes_from(G.nodes())
     total = 0

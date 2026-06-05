@@ -13,13 +13,13 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 from matplotlib.animation import FuncAnimation
 
-S_NODE = "#A8D8EA"; S_CUR = "#F4A300"; S_FOUND = "#2E8B57"
-ROOT_BORDER = "#C8860D"; NODE_BORDER = "#2C6E8F"; FOUND_BORDER = "#1E5E3A"
-A_NORMAL = "#9AA0A6"; A_HI = "#F08A00"
+from ..graph import POS_DSU
+from .palette import (
+    C_NODE, C_NODE_EDGE, C_MST, C_CONSIDER, ROOT_BORDER, FOUND_BORDER, A_DSU, A_HI,
+)
 
+POS = POS_DSU   # та сама розкладка дерева DSU, що й для статичних схем
 NODES = ["A", "B", "C", "D", "E", "F", "G"]
-POS = {"A": (2.5, 3.3), "B": (0.7, 2.0), "C": (2.0, 2.0), "D": (3.3, 2.0), "F": (4.5, 2.0),
-       "E": (2.0, 0.7), "G": (5.5, 1.2)}
 P_FINAL = {"A": "A", "B": "A", "C": "A", "D": "A", "E": "C", "F": "A", "G": "G"}   # структура перед кроком 8
 R_FINAL = {"A": 2, "B": 0, "C": 1, "D": 0, "E": 0, "F": 0, "G": 0}
 
@@ -65,11 +65,11 @@ def _draw_state(ax, i):
     for n in NODES:
         is_root = parent[n] == n
         if st.get("found") == n:
-            face.append(S_FOUND); edge.append(FOUND_BORDER); lw.append(2.6)
+            face.append(C_MST); edge.append(FOUND_BORDER); lw.append(2.6)
         elif n in cur_set:
-            face.append(S_CUR); edge.append(NODE_BORDER); lw.append(2.2)
+            face.append(C_CONSIDER); edge.append(C_NODE_EDGE); lw.append(2.2)
         else:
-            face.append(S_NODE); edge.append(ROOT_BORDER if is_root else NODE_BORDER)
+            face.append(C_NODE); edge.append(ROOT_BORDER if is_root else C_NODE_EDGE)
             lw.append(2.6 if is_root else 1.6)
 
     hi = set()
@@ -80,7 +80,7 @@ def _draw_state(ax, i):
     for e in st.get("check_edges", []):
         hi.add(e)
     normal = [e for e in D.edges() if e not in hi]
-    nx.draw_networkx_edges(D, POS, ax=ax, edgelist=normal, edge_color=A_NORMAL, width=1.8,
+    nx.draw_networkx_edges(D, POS, ax=ax, edgelist=normal, edge_color=A_DSU, width=1.8,
                            arrows=True, arrowstyle="-|>", arrowsize=18, node_size=1000,
                            min_source_margin=15, min_target_margin=17)
     hi_present = [e for e in hi if e in D.edges()]
@@ -102,10 +102,10 @@ def _draw_state(ax, i):
 
     ax.set_title(f"Крок {i + 1}/{len(STATES)}:  {st['desc']}", fontsize=10)
     ax.set_xlim(-0.3, 6.3); ax.set_ylim(0.2, 4.0); ax.set_axis_off()
-    handles = [Patch(facecolor=S_NODE, edgecolor=ROOT_BORDER, linewidth=2, label="корінь"),
-               Patch(facecolor=S_NODE, edgecolor=NODE_BORDER, label="звичайний вузол"),
-               Patch(facecolor=S_CUR, edgecolor=NODE_BORDER, label="де ми зараз (find)"),
-               Patch(facecolor=S_FOUND, edgecolor=FOUND_BORDER, label="знайдений корінь")]
+    handles = [Patch(facecolor=C_NODE, edgecolor=ROOT_BORDER, linewidth=2, label="корінь"),
+               Patch(facecolor=C_NODE, edgecolor=C_NODE_EDGE, label="звичайний вузол"),
+               Patch(facecolor=C_CONSIDER, edgecolor=C_NODE_EDGE, label="де ми зараз (find)"),
+               Patch(facecolor=C_MST, edgecolor=FOUND_BORDER, label="знайдений корінь")]
     ax.legend(handles=handles, loc="lower left", fontsize=8, frameon=False, bbox_to_anchor=(-0.02, -0.02), ncol=2)
 
 
