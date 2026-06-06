@@ -12,6 +12,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 from matplotlib.animation import FuncAnimation
+from ..core.i18n import t
 
 from ..core.palette import (
     C_NODE, C_NODE_EDGE, C_MST, C_CONSIDER, ROOT_BORDER, FOUND_BORDER, A_DSU, A_HI,
@@ -83,17 +84,17 @@ def _draw_state(ax, i):
     for n in NODES:
         if parent[n] == n:
             x, y = POS[n]
-            tag = "КОРІНЬ" if st.get("found") == n else "корінь"
-            ax.annotate(f"{tag}, ранг {rank[n]}", (x, y), xytext=(x, y + 0.42), ha="center",
+            tag = t("КОРІНЬ") if st.get("found") == n else t("корінь")
+            ax.annotate(f"{tag}, {t('ранг')} {rank[n]}", (x, y), xytext=(x, y + 0.42), ha="center",
                         fontsize=8.5, fontweight="bold",
                         color=FOUND_BORDER if st.get("found") == n else "#B5651D")
 
-    ax.set_title(f"Крок {i + 1}/{len(STATES)}:  {st['desc']}", fontsize=10.5)
+    ax.set_title(f"{t('Крок')} {i + 1}/{len(STATES)}:  {t(st['desc'])}", fontsize=10.5)
     ax.set_xlim(-0.6, 4.4); ax.set_ylim(-0.4, 3.9); ax.set_axis_off()
-    handles = [Patch(facecolor=C_NODE, edgecolor=ROOT_BORDER, linewidth=2, label="корінь (сам собі батько)"),
-               Patch(facecolor=C_NODE, edgecolor=C_NODE_EDGE, label="звичайний вузол"),
-               Patch(facecolor=C_CONSIDER, edgecolor=C_NODE_EDGE, label="де ми зараз (find)"),
-               Patch(facecolor=C_MST, edgecolor=FOUND_BORDER, label="знайдений корінь")]
+    handles = [Patch(facecolor=C_NODE, edgecolor=ROOT_BORDER, linewidth=2, label=t("корінь (сам собі батько)")),
+               Patch(facecolor=C_NODE, edgecolor=C_NODE_EDGE, label=t("звичайний вузол")),
+               Patch(facecolor=C_CONSIDER, edgecolor=C_NODE_EDGE, label=t("де ми зараз (find)")),
+               Patch(facecolor=C_MST, edgecolor=FOUND_BORDER, label=t("знайдений корінь"))]
     ax.legend(handles=handles, loc="upper left", fontsize=8, frameon=False, bbox_to_anchor=(-0.02, 1.0))
 
 

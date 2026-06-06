@@ -526,7 +526,7 @@ What to watch:
 
 > 🎞️ Below — **one and the same animation in two formats** (not two different explanations): a GIF that plays on its own, and the same video with controls. Pick whichever is handier.
 
-![How DSU is built from the inside: union by rank + path compression](images/dsu_build.gif)
+![How DSU is built from the inside: union by rank + path compression](images/en/dsu_build.gif)
 
 ▶️ *The same video — with play / pause / seek buttons:*
 
@@ -685,7 +685,7 @@ The main tool is a **queue** (FIFO principle: first in, first processed):
 
 > 🎞️ Below — **one and the same animation in two formats** (not two different explanations): a GIF that plays on its own, and the same video with controls. Pick whichever is handier.
 
-![BFS inside has_path: B→C — a path is found, so edge B–C would form a cycle](images/bfs_found.gif)
+![BFS inside has_path: B→C — a path is found, so edge B–C would form a cycle](images/en/bfs_found.gif)
 
 ▶️ *The same video — with play / pause / seek buttons:*
 
@@ -705,7 +705,7 @@ When the queue finally empties and G has still not been found → no path → E 
 
 > 🎞️ Below — **one and the same animation in two formats** (not two different explanations): a GIF that plays on its own, and the same video with controls. Pick whichever is handier.
 
-![BFS inside has_path: E→G — the target is unreachable, so edge E–G is safe to add](images/bfs_notfound.gif)
+![BFS inside has_path: E→G — the target is unreachable, so edge E–G is safe to add](images/en/bfs_notfound.gif)
 
 ▶️ *The same video — with play / pause / seek buttons:*
 
@@ -721,7 +721,7 @@ The structure on the right panel (A is the root; B, C, D, F → A; E → C; G se
 
 > 🎞️ Below — **one and the same animation in two formats** (not two different explanations): a GIF that plays on its own, and the same video with controls. Pick whichever is handier.
 
-![Building the DSU structure before step 8 (union by rank) and the B–C check](images/dsu_step8_build.gif)
+![Building the DSU structure before step 8 (union by rank) and the B–C check](images/en/dsu_step8_build.gif)
 
 ▶️ *The same video — with play / pause / seek buttons:*
 

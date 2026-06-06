@@ -12,6 +12,7 @@ from __future__ import annotations
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 from matplotlib.animation import FuncAnimation
+from ..core.i18n import t
 import networkx as nx
 
 from ...graph import build_graph, POS
@@ -83,18 +84,18 @@ def build_bfs_found_animation():
                                edgecolors=C_NODE_EDGE, linewidths=1.8)
         nx.draw_networkx_labels(G, POS, ax=ax, font_size=12, font_weight="bold", font_color="#15384A")
         cx, cy = POS["C"]
-        ax.annotate("ціль", (cx, cy), xytext=(cx - 0.75, cy + 0.10), fontsize=9.5, color="#2E8B57", fontweight="bold")
+        ax.annotate(t("ціль"), (cx, cy), xytext=(cx - 0.75, cy + 0.10), fontsize=9.5, color="#2E8B57", fontweight="bold")
 
-        ax.set_title(f"Крок {i + 1}/{len(frames)}:  {fr['desc']}", fontsize=11)
+        ax.set_title(f"{t('Крок')} {i + 1}/{len(frames)}:  {t(fr['desc'])}", fontsize=11)
         q = ", ".join(fr["queue"]) if fr["queue"] else "—"
-        ax.text(0.5, -0.05, f"Черга (наступні до обробки): [ {q} ]",
+        ax.text(0.5, -0.05, t("Черга (наступні до обробки): [ {q} ]").format(q=q),
                 transform=ax.transAxes, ha="center", va="top", fontsize=10, color="#333")
         ax.set_axis_off(); ax.margins(0.14)
-        handles = [Patch(facecolor=C_NODE, edgecolor=C_NODE_EDGE, label="ще не відвідано"),
-                   Patch(facecolor=S_QUEUE, edgecolor=C_NODE_EDGE, label="у черзі"),
-                   Patch(facecolor=C_CONSIDER, edgecolor=C_NODE_EDGE, label="обробляємо зараз"),
-                   Patch(facecolor=S_DONE, edgecolor=C_NODE_EDGE, label="відвідано"),
-                   Patch(facecolor=C_MST, edgecolor=C_NODE_EDGE, label="знайдено ціль")]
+        handles = [Patch(facecolor=C_NODE, edgecolor=C_NODE_EDGE, label=t("ще не відвідано")),
+                   Patch(facecolor=S_QUEUE, edgecolor=C_NODE_EDGE, label=t("у черзі")),
+                   Patch(facecolor=C_CONSIDER, edgecolor=C_NODE_EDGE, label=t("обробляємо зараз")),
+                   Patch(facecolor=S_DONE, edgecolor=C_NODE_EDGE, label=t("відвідано")),
+                   Patch(facecolor=C_MST, edgecolor=C_NODE_EDGE, label=t("знайдено ціль"))]
         ax.legend(handles=handles, loc="upper left", fontsize=8.5, frameon=False, bbox_to_anchor=(-0.02, 1.02))
 
     fig, ax = plt.subplots(figsize=(7.5, 5.6))
@@ -147,17 +148,17 @@ def build_bfs_notfound_animation():
                                edgecolors=C_NODE_EDGE, linewidths=1.8)
         nx.draw_networkx_labels(G, POS, ax=ax, font_size=12, font_weight="bold", font_color="#15384A")
         gx, gy = POS["G"]
-        ax.annotate("ціль", (gx, gy), xytext=(gx - 0.05, gy - 0.55), fontsize=9.5, color="#B5651D", fontweight="bold")
+        ax.annotate(t("ціль"), (gx, gy), xytext=(gx - 0.05, gy - 0.55), fontsize=9.5, color="#B5651D", fontweight="bold")
 
-        ax.set_title(f"Крок {i + 1}/{len(frames)}:  {fr['desc']}", fontsize=10.5)
-        q = ", ".join(fr["queue"]) if fr["queue"] else "—  (порожня)"
-        ax.text(0.5, -0.05, f"Черга (наступні до обробки): [ {q} ]",
+        ax.set_title(f"{t('Крок')} {i + 1}/{len(frames)}:  {t(fr['desc'])}", fontsize=10.5)
+        q = ", ".join(fr["queue"]) if fr["queue"] else t("—  (порожня)")
+        ax.text(0.5, -0.05, t("Черга (наступні до обробки): [ {q} ]").format(q=q),
                 transform=ax.transAxes, ha="center", va="top", fontsize=10, color="#333")
         ax.set_axis_off(); ax.margins(0.14)
-        handles = [Patch(facecolor=C_NODE, edgecolor=C_NODE_EDGE, label="ще не відвідано"),
-                   Patch(facecolor=S_QUEUE, edgecolor=C_NODE_EDGE, label="у черзі"),
-                   Patch(facecolor=C_CONSIDER, edgecolor=C_NODE_EDGE, label="обробляємо зараз"),
-                   Patch(facecolor=S_DONE, edgecolor=C_NODE_EDGE, label="відвідано")]
+        handles = [Patch(facecolor=C_NODE, edgecolor=C_NODE_EDGE, label=t("ще не відвідано")),
+                   Patch(facecolor=S_QUEUE, edgecolor=C_NODE_EDGE, label=t("у черзі")),
+                   Patch(facecolor=C_CONSIDER, edgecolor=C_NODE_EDGE, label=t("обробляємо зараз")),
+                   Patch(facecolor=S_DONE, edgecolor=C_NODE_EDGE, label=t("відвідано"))]
         ax.legend(handles=handles, loc="upper left", fontsize=8.5, frameon=False, bbox_to_anchor=(-0.02, 1.02))
 
     fig, ax = plt.subplots(figsize=(7.5, 5.6))
