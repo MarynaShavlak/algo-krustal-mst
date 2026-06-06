@@ -32,12 +32,13 @@ algo-krustal-mst/
 │   ├── bfs_found.gif         # анімація §11 (BFS B→C)
 │   ├── bfs_notfound.gif      # анімація §12 (BFS E→G)
 │   ├── dsu_step8_build.gif   # анімація §13 (побудова DSU перед кроком 8)
-│   └── social_preview.png    # банер 1280×640 для GitHub Social Preview
+│   ├── social_preview.png    # банер 1280×640 для GitHub Social Preview
+│   └── dsu_path_compression.png  # кадр «до → після» стиснення шляху DSU (для LinkedIn)
 ├── notebooks/
 │   └── kruskal_mst_idea.ipynb    # повний навчальний ноутбук з анімаціями
 ├── scripts/
 │   ├── generate_images.py        # регенерує всі зображення в images/
-│   └── make_banner.py            # банер 1280×640 для GitHub Social Preview
+│   └── make_banner.py            # генерує соц-зображення (банер + кадр стиснення шляху)
 └── src/
     └── kruskal_mst/
         ├── __init__.py
