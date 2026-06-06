@@ -8,7 +8,8 @@
 
 ```
 algo-krustal-mst/
-├── README.md                    # навчальний розбір алгоритму (§1–§18)
+├── README.md                    # навчальний розбір алгоритму, UA (§1–§18)
+├── README.en.md                 # English version of the walkthrough
 ├── PROJECT.md                   # структура, встановлення, запуск (цей файл)
 ├── pyproject.toml
 ├── LICENSE
