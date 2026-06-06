@@ -9,6 +9,7 @@ from matplotlib.lines import Line2D
 from ..core.palette import C_NODE, C_NODE_EDGE, C_MST, C_CONSIDER, C_REJECT
 from ..core.graph_plot import draw_graph
 from ...kruskal import kruskal_logged
+from ..core.i18n import t
 
 
 def steps_grid(G, cols=3):
@@ -25,10 +26,10 @@ def steps_grid(G, cols=3):
     for i, s in enumerate(vis):
         u, v, w = s["edge"]
         mst_set = {tuple(sorted((a, b))) for a, b, _ in s["mst_after"]}
-        tag = "ДОДАНО" if s["accepted"] else "ВІДХИЛЕНО (цикл)"
+        tag = t("ДОДАНО") if s["accepted"] else t("ВІДХИЛЕНО (цикл)")
         draw_graph(G, axes[i], mst_set=mst_set, consider=(u, v),
                    consider_ok=s["accepted"], comp=s["comp_after"],
-                   title=f"Крок {i + 1}: {u}\u2013{v} (вага {w}) — {tag}")
+                   title=t("Крок {i}: {u}\u2013{v} (вага {w}) — {tag}").format(i=i + 1, u=u, v=v, w=w, tag=tag))
 
     for j in range(len(vis), len(axes)):
         axes[j].set_axis_off()
@@ -36,10 +37,10 @@ def steps_grid(G, cols=3):
     legend_handles = [
         Line2D([0], [0], marker="o", color="none", markerfacecolor=C_NODE,
                markeredgecolor=C_NODE_EDGE, markersize=12, markeredgewidth=1.6,
-               label="колір вершини = компонента зв'язності"),
-        Line2D([0], [0], color=C_MST, lw=3.2, label="ребро у МОД"),
-        Line2D([0], [0], color=C_CONSIDER, lw=3.2, label="щойно прийняте"),
-        Line2D([0], [0], color=C_REJECT, lw=3.2, ls="--", label="відхилене (цикл)"),
+               label=t("колір вершини = компонента зв'язності")),
+        Line2D([0], [0], color=C_MST, lw=3.2, label=t("ребро у МОД")),
+        Line2D([0], [0], color=C_CONSIDER, lw=3.2, label=t("щойно прийняте")),
+        Line2D([0], [0], color=C_REJECT, lw=3.2, ls="--", label=t("відхилене (цикл)")),
     ]
     fig.legend(handles=legend_handles, loc="lower center", ncol=4, fontsize=10,
                frameon=False, bbox_to_anchor=(0.5, 0.005),

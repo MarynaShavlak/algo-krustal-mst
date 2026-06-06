@@ -14,6 +14,7 @@ from ..core.palette import HL_ACTIVE, HL_ADD, HL_SKIP, C_MST
 from ..core.graph_plot import draw_graph
 from ..core.dsu_forest import draw_dsu_forest
 from ..core.code_panel import draw_code, draw_sorted_list, LEGEND_HANDLES
+from ..core.i18n import t
 from ...dsu import DSU
 
 
@@ -68,7 +69,7 @@ def render_step(step, k, G):
                                        gridspec_kw={"width_ratios": [1.15, 1]})
         draw_code(axc, step["hl"])
         draw_sorted_list(axr, step["order"])
-        fig.suptitle("Крок 2 — сортування ребер за вагою", fontsize=13, fontweight="bold")
+        fig.suptitle(t("Крок 2 — сортування ребер за вагою"), fontsize=13, fontweight="bold")
         fig.tight_layout(rect=[0, 0, 1, 0.95])
         return fig
 
@@ -78,26 +79,26 @@ def render_step(step, k, G):
     if step["kind"] == "init":
         draw_graph(G, axg, comp=step["comp"])
         draw_dsu_forest(axd, step["parent"], step["rank"])
-        title = "Крок 1 — ініціалізація: DSU + порожнє МОД"
-        axg.set_title("Граф: 7 окремих компонент", fontsize=10, color="#333")
-        axd.set_title("Структура DSU: 7 окремих коренів", fontsize=10, color="#333")
+        title = t("Крок 1 — ініціалізація: DSU + порожнє МОД")
+        axg.set_title(t("Граф: 7 окремих компонент"), fontsize=10, color="#333")
+        axd.set_title(t("Структура DSU: 7 окремих коренів"), fontsize=10, color="#333")
     else:
         mst_set = {tuple(sorted((a, b))) for a, b, _ in step["mst"]}
         draw_graph(G, axg, mst_set=mst_set, consider=(step["u"], step["v"]),
                    consider_ok=step["accepted"], comp=step["comp"])
         draw_dsu_forest(axd, step["parent"], step["rank"],
                         highlight={step["u"], step["v"]}, new_link=step["new_link"])
-        verdict = ("ДОДАЄМО (union -> різні множини)" if step["accepted"]
-                   else "ПРОПУСКАЄМО (union -> цикл)")
-        title = f"Крок {k} — ребро {step['u']}\u2013{step['v']} (вага {step['w']}): {verdict}"
+        verdict = (t("ДОДАЄМО (union -> різні множини)") if step["accepted"]
+                   else t("ПРОПУСКАЄМО (union -> цикл)"))
+        title = t("Крок {k} — ребро {u}\u2013{v} (вага {w}): {verdict}").format(k=k, u=step['u'], v=step['v'], w=step['w'], verdict=verdict)
         axg.set_title(f"dsu.union('{step['u']}','{step['v']}') = {step['accepted']}",
                       fontsize=10, color="#333")
-        axd.set_title("Структура DSU: підвішуємо корінь під корінь" if step["accepted"]
-                      else "Структура DSU: u і v вже в одному дереві -> цикл",
+        axd.set_title(t("Структура DSU: підвішуємо корінь під корінь") if step["accepted"]
+                      else t("Структура DSU: u і v вже в одному дереві -> цикл"),
                       fontsize=10, color="#333")
     fig.suptitle(title, fontsize=12.5, fontweight="bold")
     fig.tight_layout(rect=[0, 0.09, 1, 0.95])
-    fig.legend(handles=LEGEND_HANDLES, loc="lower center", ncol=5, fontsize=8,
+    fig.legend(handles=LEGEND_HANDLES, labels=[t(h.get_label()) for h in LEGEND_HANDLES], loc="lower center", ncol=5, fontsize=8,
                frameon=False, handlelength=1.6, columnspacing=1.2, handletextpad=0.4)
     return fig
 
@@ -114,7 +115,7 @@ def step_figures(G):
 def _draw_result_list(ax, mst, total):
     """Список ребер готового МОД + сумарна вага (для підсумкового рядка гріда)."""
     ax.set_xlim(0, 1); ax.set_ylim(0, 1); ax.axis("off")
-    ax.text(0.0, 0.99, "Ребра мінімального остовного дерева:", fontsize=10.5,
+    ax.text(0.0, 0.99, t("Ребра мінімального остовного дерева:"), fontsize=10.5,
             fontweight="bold", va="top", color="#15384A")
     n = len(mst)
     top, bottom = 0.84, 0.24
@@ -123,8 +124,8 @@ def _draw_result_list(ax, mst, total):
         y = top - i * line_h
         ax.text(0.06, y, f"{u}–{v}", family="monospace", fontsize=11, va="center",
                 fontweight="bold", color=C_MST)
-        ax.text(0.30, y, f"вага {w}", family="monospace", fontsize=10.5, va="center", color="#444")
-    ax.text(0.06, 0.10, f"Разом: {n} ребер,  сумарна вага = {total}",
+        ax.text(0.30, y, f"{t('вага')} {w}", family="monospace", fontsize=10.5, va="center", color="#444")
+    ax.text(0.06, 0.10, t("Разом: {n} ребер,  сумарна вага = {total}").format(n=n, total=total),
             fontsize=10.5, fontweight="bold", va="center", color="#15384A")
 
 
@@ -140,7 +141,7 @@ def dsu_steps_grid(G):
                              gridspec_kw={"width_ratios": [1.05, 0.95, 1.0]})
 
     def row_legend(ax):
-        ax.legend(handles=LEGEND_HANDLES, loc="upper center", bbox_to_anchor=(0.5, -0.04),
+        ax.legend(handles=LEGEND_HANDLES, labels=[t(h.get_label()) for h in LEGEND_HANDLES], loc="upper center", bbox_to_anchor=(0.5, -0.04),
                   ncol=3, fontsize=8, frameon=False,
                   handlelength=1.5, columnspacing=1.1, handletextpad=0.4)
 
@@ -150,28 +151,28 @@ def dsu_steps_grid(G):
         if step["kind"] == "sort":
             draw_sorted_list(axg, step["order"])
             axd.set_axis_off()
-            axc.set_title("Крок 2 — сортування ребер за вагою", fontsize=11, fontweight="bold", loc="left")
+            axc.set_title(t("Крок 2 — сортування ребер за вагою"), fontsize=11, fontweight="bold", loc="left")
             continue
         if step["kind"] == "init":
             draw_graph(G, axg, comp=step["comp"])
             draw_dsu_forest(axd, step["parent"], step["rank"])
-            axc.set_title("Крок 1 — ініціалізація: DSU + порожнє МОД", fontsize=11, fontweight="bold", loc="left")
-            axg.set_title("Граф: 7 окремих компонент", fontsize=10, color="#333")
-            axd.set_title("Структура DSU: 7 окремих коренів", fontsize=10, color="#333")
+            axc.set_title(t("Крок 1 — ініціалізація: DSU + порожнє МОД"), fontsize=11, fontweight="bold", loc="left")
+            axg.set_title(t("Граф: 7 окремих компонент"), fontsize=10, color="#333")
+            axd.set_title(t("Структура DSU: 7 окремих коренів"), fontsize=10, color="#333")
         else:
             mst_set = {tuple(sorted((a, b))) for a, b, _ in step["mst"]}
             draw_graph(G, axg, mst_set=mst_set, consider=(step["u"], step["v"]),
                        consider_ok=step["accepted"], comp=step["comp"])
             draw_dsu_forest(axd, step["parent"], step["rank"],
                             highlight={step["u"], step["v"]}, new_link=step["new_link"])
-            verdict = ("ДОДАЄМО (union → різні множини)" if step["accepted"]
-                       else "ПРОПУСКАЄМО (union → цикл)")
-            axc.set_title(f"Крок {i + 1} — ребро {step['u']}–{step['v']} (вага {step['w']}): {verdict}",
+            verdict = (t("ДОДАЄМО (union → різні множини)") if step["accepted"]
+                       else t("ПРОПУСКАЄМО (union → цикл)"))
+            axc.set_title(t("Крок {k} — ребро {u}–{v} (вага {w}): {verdict}").format(k=i + 1, u=step['u'], v=step['v'], w=step['w'], verdict=verdict),
                           fontsize=10.5, fontweight="bold", loc="left")
             axg.set_title(f"dsu.union('{step['u']}','{step['v']}') = {step['accepted']}",
                           fontsize=10, color="#333")
-            axd.set_title("Структура DSU: підвішуємо корінь під корінь" if step["accepted"]
-                          else "Структура DSU: u і v вже в одному дереві → цикл",
+            axd.set_title(t("Структура DSU: підвішуємо корінь під корінь") if step["accepted"]
+                          else t("Структура DSU: u і v вже в одному дереві → цикл"),
                           fontsize=10, color="#333")
         row_legend(axg)
 
@@ -182,10 +183,10 @@ def dsu_steps_grid(G):
     _draw_result_list(axl, final, total)
     draw_graph(G, axt, mst_set={tuple(sorted((a, b))) for a, b, _ in final}, comp=steps[-1]["comp"])
     axe.set_axis_off()
-    axl.set_title("Підсумок", fontsize=11, fontweight="bold", loc="left")
-    axt.set_title(f"Готове МОД (сумарна вага = {total})", fontsize=10, color="#333")
+    axl.set_title(t("Підсумок"), fontsize=11, fontweight="bold", loc="left")
+    axt.set_title(t("Готове МОД (сумарна вага = {total})").format(total=total), fontsize=10, color="#333")
     row_legend(axt)
 
-    fig.suptitle("Покроково DSU-версія: код | граф | структура DSU", fontsize=14, fontweight="bold", y=0.997)
+    fig.suptitle(t("Покроково DSU-версія: код | граф | структура DSU"), fontsize=14, fontweight="bold", y=0.997)
     fig.tight_layout(rect=[0, 0.005, 1, 0.985], h_pad=6.0)
     return fig
