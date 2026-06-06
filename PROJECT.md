@@ -31,11 +31,13 @@ algo-krustal-mst/
 │   ├── dsu_build.gif         # анімація §7 (GIF; поряд може лежати .mp4 для відео)
 │   ├── bfs_found.gif         # анімація §11 (BFS B→C)
 │   ├── bfs_notfound.gif      # анімація §12 (BFS E→G)
-│   └── dsu_step8_build.gif   # анімація §13 (побудова DSU перед кроком 8)
+│   ├── dsu_step8_build.gif   # анімація §13 (побудова DSU перед кроком 8)
+│   └── social_preview.png    # банер 1280×640 для GitHub Social Preview
 ├── notebooks/
 │   └── kruskal_mst_idea.ipynb    # повний навчальний ноутбук з анімаціями
 ├── scripts/
-│   └── generate_images.py        # регенерує всі зображення в images/
+│   ├── generate_images.py        # регенерує всі зображення в images/
+│   └── make_banner.py            # банер 1280×640 для GitHub Social Preview
 └── src/
     └── kruskal_mst/
         ├── __init__.py
