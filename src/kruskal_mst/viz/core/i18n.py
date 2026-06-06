@@ -59,6 +59,10 @@ _EN = {
     "has_path(forest, '{u}', '{v}') = {connected}  →  {verdict}":
         "has_path(forest, '{u}', '{v}') = {connected}  →  {verdict}",
     "   |  дерево готове: {need} ребер": "   |  tree complete: {need} edges",
+    # ── generate_images.py ──
+    "Вихідний зважений граф": "Input weighted graph",
+    "Структура DSU на кроці перевірки B–C": "DSU structure at the B–C check step",
+    "Мінімальне остовне дерево (вага {total})": "Minimum spanning tree (weight {total})",
 }
 
 

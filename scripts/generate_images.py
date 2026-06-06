@@ -40,7 +40,10 @@ from kruskal_mst.viz import (                                         # noqa: E4
     build_bfs_notfound_animation, build_dsu_step8_animation,
 )
 
-IMAGES = os.path.join(ROOT, "images")
+from kruskal_mst.viz.core.i18n import set_lang, t            # noqa: E402
+LANG = "en" if "en" in sys.argv[1:] else "uk"
+set_lang(LANG)
+IMAGES = os.path.join(ROOT, "images", "en") if LANG == "en" else os.path.join(ROOT, "images")
 os.makedirs(IMAGES, exist_ok=True)
 
 
@@ -71,7 +74,7 @@ def main():
 
     # 1) вихідний граф
     fig, ax = plt.subplots(figsize=(7, 5.2))
-    draw_graph(G, ax, title="Вихідний зважений граф")
+    draw_graph(G, ax, title=t("Вихідний зважений граф"))
     fig.tight_layout()
     save(fig, "graph.png")
 
@@ -90,7 +93,7 @@ def main():
     fig, ax = plt.subplots(figsize=(7.5, 5.0))
     draw_dsu_forest(ax, cyc_step["parent"], cyc_step["rank"],
                     highlight={cyc_step["u"], cyc_step["v"]})
-    ax.set_title("Структура DSU на кроці перевірки B\u2013C", fontsize=12)
+    ax.set_title(t("Структура DSU на кроці перевірки B\u2013C"), fontsize=12)
     fig.tight_layout()
     save(fig, "dsu_step8.png")
 
@@ -98,7 +101,7 @@ def main():
     mst, total = kruskal_mst(G)
     mst_set = {tuple(sorted((u, v))) for u, v, _ in mst}
     fig, ax = plt.subplots(figsize=(7, 5.2))
-    draw_graph(G, ax, mst_set=mst_set, title=f"Мінімальне остовне дерево (вага {total})")
+    draw_graph(G, ax, mst_set=mst_set, title=t("Мінімальне остовне дерево (вага {total})").format(total=total))
     fig.tight_layout()
     save(fig, "mst_result.png")
 

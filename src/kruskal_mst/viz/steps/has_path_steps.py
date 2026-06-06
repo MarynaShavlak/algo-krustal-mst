@@ -19,6 +19,7 @@ from ..core.palette import (
     HL_ACTIVE, HL_ADD, HL_SKIP, C_PANEL_EDGE,
 )
 from ..core.code_panel import CODE_HAS_PATH, draw_code, draw_sorted_list
+from ..core.i18n import t
 
 LEGEND_HANDLES = [
     Line2D([0], [0], color=C_PANEL_EDGE, lw=2.4, label="ребро графа (кандидат, не в МОД)"),
@@ -103,31 +104,31 @@ def has_path_steps_grid(G, pos=POS):
         draw_code(axc, step["hl"], code=CODE_HAS_PATH)
         if step["kind"] == "init":
             _draw_state(axr, G, pos, step["comp"], step["mst"], faint_only=True)
-            axc.set_title("Крок 1 — ініціалізація лісу", fontsize=11, fontweight="bold", loc="left")
-            axr.set_title("Ліс = 7 окремих компонент (вершини ще не з'єднані).\n"
-                          "Сірим — ребра вхідного графа, серед яких обиратимемо.",
+            axc.set_title(t("Крок 1 — ініціалізація лісу"), fontsize=11, fontweight="bold", loc="left")
+            axr.set_title(t("Ліс = 7 окремих компонент (вершини ще не з'єднані).\n"
+                          "Сірим — ребра вхідного графа, серед яких обиратимемо."),
                           fontsize=9.5, color="#333")
         elif step["kind"] == "sort":
             draw_sorted_list(axr, step["order"])
-            axc.set_title("Крок 2 — сортування ребер за вагою", fontsize=11, fontweight="bold", loc="left")
+            axc.set_title(t("Крок 2 — сортування ребер за вагою"), fontsize=11, fontweight="bold", loc="left")
         else:
             _draw_state(axr, G, pos, step["comp"], step["mst"],
                         consider=(step["u"], step["v"]), added=step["added"])
-            verdict = "ДОДАЄМО (різні компоненти)" if step["added"] else "ПРОПУСКАЄМО (цикл)"
-            axc.set_title(f"Крок {i + 1} — ребро {step['u']}–{step['v']} (вага {step['w']})",
+            verdict = t("ДОДАЄМО (різні компоненти)") if step["added"] else t("ПРОПУСКАЄМО (цикл)")
+            axc.set_title(t("Крок {i} — ребро {u}–{v} (вага {w})").format(i=i + 1, u=step['u'], v=step['v'], w=step['w']),
                           fontsize=11, fontweight="bold", loc="left")
             sub = f"has_path(forest, '{step['u']}', '{step['v']}') = {step['connected']}  →  {verdict}"
             if step["added"] and step["done"]:
-                sub += f"   |  дерево готове: {need} ребер"
+                sub += t("   |  дерево готове: {need} ребер").format(need=need)
             axr.set_title(sub, fontsize=9.5, color="#333")
 
         # легенда під кожним кроком (крім сортування) — як у ноутбуці
         if step["kind"] != "sort":
-            axr.legend(handles=LEGEND_HANDLES, loc="upper center", bbox_to_anchor=(0.5, -0.03),
+            axr.legend(handles=LEGEND_HANDLES, labels=[t(h.get_label()) for h in LEGEND_HANDLES], loc="upper center", bbox_to_anchor=(0.5, -0.03),
                        ncol=2, fontsize=8, frameon=False,
                        handlelength=1.6, columnspacing=1.4, handletextpad=0.4)
 
-    fig.suptitle("Покроково: код (підсвічено активні рядки) | граф (компоненти кольором)",
+    fig.suptitle(t("Покроково: код (підсвічено активні рядки) | граф (компоненти кольором)"),
                  fontsize=14, fontweight="bold", y=0.997)
     # відступ між рядками-кроками (щоб панелі й легенди не злипалися)
     fig.tight_layout(rect=[0, 0.005, 1, 0.985], h_pad=6.0)
