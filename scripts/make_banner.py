@@ -2,9 +2,10 @@
 """Генерує соц-зображення 1280×640 (у палітрі проєкту) для GitHub та LinkedIn:
 
 * ``social_preview.png``       — банер для GitHub Social Preview (граф + назва/стек);
-* ``dsu_path_compression.png`` — кадр «до → після» стиснення шляху в DSU.
+* ``dsu_path_compression.png`` — кадр «до → після» стиснення шляху в DSU;
+* ``bfs_cycle_check.png``      — коли ребро дає цикл (B–C), а коли безпечне (E–G).
 
-Запуск:  python scripts/make_banner.py   (кладе обидва файли в images/)
+Запуск:  python scripts/make_banner.py   (кладе всі файли в images/)
 Працює без встановлення пакета — додає ``src/`` у шлях самостійно.
 """
 
@@ -25,9 +26,9 @@ plt.rcParams["font.family"] = "DejaVu Sans"
 
 from kruskal_mst import build_graph, kruskal_mst, POS                # noqa: E402
 from kruskal_mst.viz import (                                        # noqa: E402
-    C_NODE, C_NODE_EDGE, C_MST, C_BASE_EDGE, A_DSU, ROOT_BORDER,
+    C_NODE, C_NODE_EDGE, C_MST, C_BASE_EDGE, A_DSU, ROOT_BORDER, C_REJECT, C_CONSIDER,
 )
-from kruskal_mst.viz.core.palette import A_HI                        # noqa: E402
+from kruskal_mst.viz.core.palette import A_HI, C_VISIT              # noqa: E402
 
 BG, DARK, ACC = "#F6FAFB", "#15384A", "#2C6E8F"
 
@@ -126,9 +127,55 @@ def make_path_compression(path: str) -> None:
     plt.close(fig)
 
 
+def make_bfs_cycle_check(path: str) -> None:
+    """Кадр-контраст для §11/§12: коли ребро дає цикл (B–C), а коли безпечне (E–G)."""
+    G = build_graph()
+    forest = [("A", "D"), ("C", "E"), ("D", "F"), ("A", "B"), ("B", "E")]   # ребра вже в МОД
+    norm = lambda e: tuple(sorted(e))
+    fset = {norm(e) for e in forest}
+    comp1 = {"A", "B", "C", "D", "E", "F"}      # одна компонента (зв'язана лісом); G — окремо
+
+    def draw_panel(ax, candidate, accepted):
+        cand = norm(candidate)
+        bg = [(u, v) for u, v in G.edges() if norm((u, v)) not in fset and norm((u, v)) != cand]
+        fr = [(u, v) for u, v in G.edges() if norm((u, v)) in fset]
+        nx.draw_networkx_edges(G, POS, ax=ax, edgelist=bg, edge_color=C_BASE_EDGE, width=1.5)
+        nx.draw_networkx_edges(G, POS, ax=ax, edgelist=fr, edge_color=C_MST, width=3.5)
+        nx.draw_networkx_edges(G, POS, ax=ax, edgelist=[candidate],
+                               edge_color=(C_MST if accepted else C_REJECT), width=4.5, style="dashed")
+        q = set(candidate)
+        face = [C_NODE if n in comp1 else C_VISIT for n in G.nodes()]
+        ec = [C_CONSIDER if n in q else (C_NODE_EDGE if n in comp1 else "#B5651D") for n in G.nodes()]
+        lw = [3.4 if n in q else 1.8 for n in G.nodes()]
+        nx.draw_networkx_nodes(G, POS, ax=ax, node_size=850, node_color=face, edgecolors=ec, linewidths=lw)
+        nx.draw_networkx_labels(G, POS, ax=ax, font_size=13, font_weight="bold", font_color=DARK)
+        ax.set_axis_off(); ax.margins(0.16)
+
+    fig = plt.figure(figsize=(12.8, 6.4), dpi=100)
+    fig.patch.set_facecolor(BG)
+    fig.text(0.5, 0.93, "has_path: коли ребро дає цикл, а коли безпечне", ha="center",
+             fontsize=25, fontweight="bold", color=DARK)
+    fig.text(0.5, 0.855, "беремо ребро лише якщо воно з'єднує дві РІЗНІ компоненти",
+             ha="center", fontsize=15.5, color=ACC)
+
+    axL = fig.add_axes([0.02, 0.10, 0.45, 0.66]); draw_panel(axL, ("B", "C"), accepted=False)
+    axL.set_title("B–C:  та сама компонента  →  ЦИКЛ", fontsize=15,
+                  color="#B23A48", fontweight="bold", pad=4)
+    axR = fig.add_axes([0.53, 0.10, 0.45, 0.66]); draw_panel(axR, ("E", "G"), accepted=True)
+    axR.set_title("E–G:  різні компоненти  →  ДОДАЄМО", fontsize=15,
+                  color="#2E7D46", fontweight="bold", pad=4)
+
+    fig.text(0.5, 0.035, "зелене — ребра вже в МОД    ·    помаранчева рамка — вершини запиту"
+             "    ·    колір вершини = компонента (G — окрема)", ha="center", fontsize=11.5, color="#555")
+    fig.savefig(path, dpi=100, facecolor=BG)
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     img = os.path.join(ROOT, "images")
     make_banner(os.path.join(img, "social_preview.png"))
     make_path_compression(os.path.join(img, "dsu_path_compression.png"))
+    make_bfs_cycle_check(os.path.join(img, "bfs_cycle_check.png"))
     print("-> images/social_preview.png (1280x640)")
     print("-> images/dsu_path_compression.png (1280x640)")
+    print("-> images/bfs_cycle_check.png (1280x640)")

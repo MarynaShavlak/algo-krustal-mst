@@ -33,7 +33,8 @@ algo-krustal-mst/
 │   ├── bfs_notfound.gif      # анімація §12 (BFS E→G)
 │   ├── dsu_step8_build.gif   # анімація §13 (побудова DSU перед кроком 8)
 │   ├── social_preview.png    # банер 1280×640 для GitHub Social Preview
-│   └── dsu_path_compression.png  # кадр «до → після» стиснення шляху DSU (для LinkedIn)
+│   ├── dsu_path_compression.png  # кадр «до → після» стиснення шляху DSU (для LinkedIn)
+│   └── bfs_cycle_check.png   # коли ребро дає цикл (B–C), а коли безпечне (E–G)
 ├── notebooks/
 │   └── kruskal_mst_idea.ipynb    # повний навчальний ноутбук з анімаціями
 ├── scripts/
