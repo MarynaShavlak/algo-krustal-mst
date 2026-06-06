@@ -1,0 +1,69 @@
+# -*- coding: utf-8 -*-
+"""Двомовні підписи для схем (uk/en).
+
+``t(s)`` повертає ``s`` для української (типово) або переклад для англійської.
+Ключ — сам український рядок, тож UA-вивід лишається байт-у-байт незмінним:
+коли ``LANG == "uk"``, функція повертає аргумент без змін.
+
+generate_images.py перемикає мову через ``set_lang("en")`` й кладе схеми в images/en/.
+Рядки з ``{плейсхолдерами}`` використовуються як ``t(шаблон).format(...)``.
+"""
+
+from __future__ import annotations
+
+LANG = "uk"
+
+
+def set_lang(lang: str) -> None:
+    """Встановити мову підписів: ``"uk"`` (типово) або ``"en"``."""
+    global LANG
+    assert lang in ("uk", "en"), lang
+    LANG = lang
+
+
+#: Український рядок -> англійський переклад (лише те, що потрапляє у схеми).
+_EN = {
+    # ── core/code_panel ──
+    "    if dsu.union(u, v):          # різні множини?":
+        "    if dsu.union(u, v):          # different sets?",
+    "    # else: вже разом -> цикл -> пропуск":
+        "    # else: already together -> cycle -> skip",
+    "    # else: u,v вже з'єднані -> цикл -> пропустити":
+        "    # else: u,v already connected -> cycle -> skip",
+    "Відсортовані ребра (за зростанням ваги):":
+        "Sorted edges (by increasing weight):",
+    "Далі перебираємо зверху вниз →":
+        "Then we scan top to bottom →",
+    "ребро графа (кандидат)": "graph edge (candidate)",
+    "обране (у МОД)": "chosen (in MST)",
+    "щойно додане / нова зв'язка DSU": "just added / new DSU link",
+    "відкинуте (цикл)": "rejected (cycle)",
+    "корінь DSU (рN = ранг)": "DSU root (rN = rank)",
+    # ── core/dsu_forest ── (префікс рангу біля кореня: рN -> rN)
+    "р": "r",
+    # ── steps/has_path_steps ──
+    "ребро графа (кандидат, не в МОД)": "graph edge (candidate, not in MST)",
+    "щойно додане": "just added",
+    "Крок 1 — ініціалізація лісу": "Step 1 — forest initialization",
+    "Ліс = 7 окремих компонент (вершини ще не з'єднані).\n"
+    "Сірим — ребра вхідного графа, серед яких обиратимемо.":
+        "Forest = 7 separate components (vertices not connected yet).\n"
+        "Gray — input-graph edges to choose among.",
+    "Крок 2 — сортування ребер за вагою": "Step 2 — sorting edges by weight",
+    "ДОДАЄМО (різні компоненти)": "ADD (different components)",
+    "ПРОПУСКАЄМО (цикл)": "SKIP (cycle)",
+    "Покроково: код (підсвічено активні рядки) | граф (компоненти кольором)":
+        "Step by step: code (active lines highlighted) | graph (components colored)",
+    # templated (use via t(...).format(...))
+    "Крок {i} — ребро {u}–{v} (вага {w})": "Step {i} — edge {u}–{v} (weight {w})",
+    "has_path(forest, '{u}', '{v}') = {connected}  →  {verdict}":
+        "has_path(forest, '{u}', '{v}') = {connected}  →  {verdict}",
+    "   |  дерево готове: {need} ребер": "   |  tree complete: {need} edges",
+}
+
+
+def t(s: str) -> str:
+    """Повернути підпис мовою ``LANG`` (ключ — український рядок)."""
+    if LANG == "uk":
+        return s
+    return _EN.get(s, s)

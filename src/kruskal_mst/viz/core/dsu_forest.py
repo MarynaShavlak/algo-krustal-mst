@@ -7,6 +7,7 @@ import networkx as nx
 
 from ...graph import POS_DSU
 from .palette import C_NODE, C_NODE_EDGE, C_CONSIDER, ROOT_BORDER, A_DSU
+from .i18n import t
 
 
 def draw_dsu_forest(ax, parent, rank, highlight=None, new_link=None, pos=POS_DSU):
@@ -50,7 +51,7 @@ def draw_dsu_forest(ax, parent, rank, highlight=None, new_link=None, pos=POS_DSU
     for n in D.nodes():
         if parent[n] == n:
             x, y = pos[n]
-            ax.annotate(f"р{rank[n]}", (x, y), xytext=(x, y + 0.40), ha="center",
+            ax.annotate(f"{t('р')}{rank[n]}", (x, y), xytext=(x, y + 0.40), ha="center",
                         fontsize=7.5, color="#B5651D", fontweight="bold")
     ax.set_xlim(-0.3, 6.3)
     ax.set_ylim(0.2, 4.0)

@@ -9,6 +9,7 @@ from matplotlib.lines import Line2D
 from .palette import (
     C_BASE_EDGE, C_MST, C_CONSIDER, C_REJECT, C_NODE, ROOT_BORDER,
 )
+from .i18n import t
 
 #: Код DSU-версії Краскала, який показуємо ліворуч на покрокових схемах.
 CODE = [
@@ -52,7 +53,7 @@ def draw_code(ax, highlights, code=CODE):
         if i in highlights:
             ax.add_patch(Rectangle((0, y - line_h * 0.45), 1, line_h * 0.9,
                                    facecolor=highlights[i], edgecolor="none", zorder=0))
-        ax.text(0.015, y, line, family="monospace", fontsize=10,
+        ax.text(0.015, y, t(line), family="monospace", fontsize=10,
                 va="center", ha="left", color="#1b1b1b", zorder=2)
 
 
@@ -61,7 +62,7 @@ def draw_sorted_list(ax, order):
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
-    ax.text(0.0, 0.99, "Відсортовані ребра (за зростанням ваги):",
+    ax.text(0.0, 0.99, t("Відсортовані ребра (за зростанням ваги):"),
             fontsize=10.5, fontweight="bold", va="top", color="#15384A")
     n = len(order)
     top, bottom = 0.86, 0.06
@@ -71,8 +72,8 @@ def draw_sorted_list(ax, order):
         ax.text(0.04, y, f"{i + 1:>2}.", family="monospace", fontsize=10, va="center", color="#888")
         ax.text(0.16, y, f"{u}\u2013{v}", family="monospace", fontsize=10.5, va="center",
                 fontweight="bold", color="#1b1b1b")
-        ax.text(0.40, y, f"вага {w}", family="monospace", fontsize=10, va="center", color="#444")
-    ax.text(0.0, -0.02, "Далі перебираємо зверху вниз \u2192", fontsize=8.5,
+        ax.text(0.40, y, f"{t('вага')} {w}", family="monospace", fontsize=10, va="center", color="#444")
+    ax.text(0.0, -0.02, t("Далі перебираємо зверху вниз \u2192"), fontsize=8.5,
             style="italic", va="top", color="#666")
 
 
