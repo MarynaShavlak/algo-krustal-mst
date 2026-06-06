@@ -11,6 +11,7 @@ from ..kruskal import kruskal_dsu, kruskal_naive
 from ..graph import random_connected
 
 from .core.palette import C_MST, C_REJECT
+from .core.i18n import t
 
 
 def run_benchmark(sizes=(50, 100, 200, 400, 600), seed=123, check=True):
@@ -42,11 +43,11 @@ def plot_benchmark(data):
     ax.plot(data["sizes"], data["dsu_ms"], "o-", color=C_MST, lw=2.2,
             markersize=6, label="DSU (Union-Find)")
     ax.plot(data["sizes"], data["naive_ms"], "s--", color=C_REJECT, lw=2.2,
-            markersize=6, label="наївний (nx.has_path)")
+            markersize=6, label=t("наївний (nx.has_path)"))
     ax.set_yscale("log")
-    ax.set_xlabel("Кількість вершин")
-    ax.set_ylabel("Час, мс (логарифмічна шкала)")
-    ax.set_title("Масштабування часу: DSU проти nx.has_path")
+    ax.set_xlabel(t("Кількість вершин"))
+    ax.set_ylabel(t("Час, мс (логарифмічна шкала)"))
+    ax.set_title(t("Масштабування часу: DSU проти nx.has_path"))
     ax.grid(True, which="both", ls=":", alpha=0.5)
     ax.legend()
     fig.tight_layout()

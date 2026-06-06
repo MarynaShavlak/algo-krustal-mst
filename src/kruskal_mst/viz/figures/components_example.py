@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 from ..core.palette import C_NODE_EDGE, A_DSU
+from ..core.i18n import t
 
 # власна послідовність кольорів компонент (інший порядок, ніж COMP_PALETTE,
 # щоб три острівці пофарбувались саме як у ноутбуці)
@@ -33,7 +34,7 @@ def connected_components_example():
                            edgecolors=C_NODE_EDGE, linewidths=1.8)
     nx.draw_networkx_labels(G, POS, ax=ax, font_size=13, font_weight="bold", font_color="#15384A")
     nx.draw_networkx_edges(G, POS, ax=ax, width=2.4, edge_color=A_DSU)
-    ax.set_title("Граф із 3 компонентами зв'язності (кожен колір — окрема компонента)", fontsize=12)
+    ax.set_title(t("Граф із 3 компонентами зв'язності (кожен колір — окрема компонента)"), fontsize=12)
     ax.set_axis_off(); ax.margins(0.15)
     fig.tight_layout()
     return fig

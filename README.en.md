@@ -8,7 +8,7 @@
 2. **contains no cycles** (a tree),
 3. has the **smallest possible total weight** among all such subsets.
 
-![Input weighted graph](images/graph.png)
+![Input weighted graph](images/en/graph.png)
 
 > 📦 This is an educational walkthrough of the algorithm. The **repository structure, installation and how to run** live in a separate file — [**PROJECT.md**](PROJECT.md).
 
@@ -97,7 +97,7 @@ Graph **G** — 4 cities {A, B, C, D} and 5 roads: A–B, A–C, B–C, C–D, B
 
 One of its spanning trees: **T = {A–B, A–C, C–D}** — the same 4 vertices, but now **3 edges** (exactly n − 1) and **no cycles**. Let's look at it below.
 
-![Graph G (has cycles) and one of its spanning trees T: the same 4 vertices, but 3 edges with no cycles](images/spanning_tree_example.png)
+![Graph G (has cycles) and one of its spanning trees T: the same 4 vertices, but 3 edges with no cycles](images/en/spanning_tree_example.png)
 
 ```python
 import networkx as nx
@@ -169,7 +169,7 @@ A graph may consist of **one** component (everything connected) or of **several*
 
 **Connection to `has_path`:** `nx.has_path(G, u, v)` returns `True` if and only if `u` and `v` are in the **same** component (on the same island).
 
-![A graph with 3 connected components (each color is a separate component)](images/components_example.png)
+![A graph with 3 connected components (each color is a separate component)](images/en/components_example.png)
 
 ```python
 import networkx as nx
@@ -267,7 +267,7 @@ print(f"Graph built: {G.number_of_nodes()} vertices, {G.number_of_edges()} edges
 Graph built: 7 vertices, 11 edges.
 ```
 
-![Input weighted graph](images/graph.png)
+![Input weighted graph](images/en/graph.png)
 
 <a id="sec5"></a>
 
@@ -393,7 +393,7 @@ There are 13 panels in total: forest initialization, edge sorting, and then one 
 
 All 13 panels together (a row = `[ code | graph ]`; the active lines are highlighted on the left, the graph state on the right):
 
-![Step by step: code with highlighted lines and the graph with components colored, for all 13 steps](images/has_path_steps.png)
+![Step by step: code with highlighted lines and the graph with components colored, for all 13 steps](images/en/has_path_steps.png)
 
 ### Why edge B–C is skipped at step 8
 
@@ -410,7 +410,7 @@ If we now added the direct edge B–C, it would close the triangle — **the cyc
 
 In plain words: B and C are already on the same "island", connected through E. A direct bridge B–C connects nothing new — it would only create a redundant loop.
 
-![Step 8: edge B–C would close the cycle B → E → C → B (green — in the MST, orange — the existing path B→E→C)](images/bc_cycle_step8.png)
+![Step 8: edge B–C would close the cycle B → E → C → B (green — in the MST, orange — the existing path B→E→C)](images/en/bc_cycle_step8.png)
 
 ### Summary
 
@@ -462,7 +462,7 @@ If you do `union` naively (hanging trees any which way), a tree can **grow into 
 
 Together they give an amortized $O(\alpha(n))$ per operation, where $\alpha$ is the inverse Ackermann function. For any realistic $n$ we have $\alpha(n) \le 4$, i.e. effectively a **constant**. Here is what it looks like.
 
-![Without optimizations a degenerate chain gives find(5) in 4 steps; with path compression the tree is flat — 1 step](images/chain_vs_flat.png)
+![Without optimizations a degenerate chain gives find(5) in 4 steps; with path compression the tree is flat — 1 step](images/en/chain_vs_flat.png)
 
 ```python
 class DSU:
@@ -643,7 +643,7 @@ Correctness: on 5 random graphs both implementations gave the same MST weight �
     600 |   1199 |    13.008 |    223.287 |       17.2×
 ```
 
-![Benchmark: DSU vs nx.has_path](images/benchmark.png)
+![Benchmark: DSU vs nx.has_path](images/en/benchmark.png)
 
 On tiny graphs there is almost no difference (because of DSU's overhead it can even be a touch slower). On bigger graphs DSU wins dramatically, and the gap grows — exactly as the asymptotics $O(E \log E)$ vs $O(E \cdot (V + E))$ predict.
 
@@ -658,7 +658,7 @@ Let's take the **same question** — "are B and C already connected?" — at ste
 
 So it is not just a difference in speed — these are **different structures** and **different kinds of work**: "walk the graph" vs "compare two labels".
 
-![Comparison at step 8: BFS inside has_path on the left, climbing to the root in DSU on the right](images/compare_step8.png)
+![Comparison at step 8: BFS inside has_path on the left, climbing to the root in DSU on the right](images/en/compare_step8.png)
 
 <a id="sec11"></a>
 
@@ -717,7 +717,7 @@ https://github.com/user-attachments/assets/378874d0-b067-489c-8815-c46e4a495e22
 
 The structure on the right panel (A is the root; B, C, D, F → A; E → C; G separate) is no accident — it was **built from the 5 edges that were added to the MST** before step 8: A–D, C–E, D–F, A–B, B–E. The animation below shows this process step by step, and then the B–C check itself.
 
-![The DSU structure at the B–C check step](images/dsu_step8.png)
+![The DSU structure at the B–C check step](images/en/dsu_step8.png)
 
 > 🎞️ Below — **one and the same animation in two formats** (not two different explanations): a GIF that plays on its own, and the same video with controls. Pick whichever is handier.
 
@@ -871,7 +871,7 @@ The same format as for `nx.has_path`, but each step shows **three** panels side 
 
 So the connection is immediately visible: what on the graph is "a single-color component" is in DSU "a tree with one root". Below — **all the steps** (initialization, sorting, and one per each edge) plus the **summary**, each in the `[ code | graph | DSU structure ]` format with a legend on every step:
 
-![All steps of the DSU version: for each step the code, the graph and the DSU structure, plus the final tree](images/dsu_steps.png)
+![All steps of the DSU version: for each step the code, the graph and the DSU structure, plus the final tree](images/en/dsu_steps.png)
 
 ### Decision table
 
@@ -895,7 +895,7 @@ The same process as a table. Edges are sorted by increasing weight; decisions ar
 
 The final minimum spanning tree:
 
-![Minimum spanning tree](images/mst_result.png)
+![Minimum spanning tree](images/en/mst_result.png)
 
 <a id="sec16"></a>
 
@@ -931,7 +931,7 @@ def kruskal_logged(G):
     return mst_edges, total, steps
 ```
 
-![All steps of Kruskal](images/steps_grid.png)
+![All steps of Kruskal](images/en/steps_grid.png)
 
 <a id="sec17"></a>
 
@@ -947,7 +947,7 @@ Split all vertices into **two groups** (any way, as long as each is non-empty). 
 
 How this works in Kruskal: when we add an edge (u, v), the vertices u and v are still in different components. Look at the cut "the component of vertex u" vs "all other vertices". We scan edges from the lightest, so all the lighter ones have already been considered — and none connected these two sides. Hence (u, v) is the lightest edge across this cut, and it is safe to take.
 
-![Graph cut](images/cut_property.png)
+![Graph cut](images/en/cut_property.png)
 
 ### The cycle rule
 
@@ -972,7 +972,7 @@ Take, for example, another, heavier spanning tree: **T\* = {A–B, B–D, C–E,
 
 So the expensive edge B–D (9) was replaced by the cheaper A–D (5) — the very one Kruskal chose — and the weight did not increase (here it even dropped). If the trees differed more, we would **repeat** such a swap: each time take the first missing Kruskal edge and drop the heavier edge of the resulting cycle. Each step does not increase the weight and brings T\* closer to T. Hence T is no worse than any other tree — it is **optimal**.
 
-![Exchange argument](images/exchange_argument.png)
+![Exchange argument](images/en/exchange_argument.png)
 
 <a id="sec18"></a>
 

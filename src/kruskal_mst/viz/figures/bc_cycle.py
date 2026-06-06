@@ -9,6 +9,7 @@ import networkx as nx
 
 from ...graph import POS
 from ..core.palette import C_NODE, C_NODE_EDGE, C_MST, C_REJECT, C_CONSIDER, C_PANEL_EDGE
+from ..core.i18n import t
 
 
 def bc_cycle_step8(G, pos=POS):
@@ -38,12 +39,12 @@ def bc_cycle_step8(G, pos=POS):
     nx.draw_networkx_edge_labels(G, pos, ax=ax, edge_labels=nx.get_edge_attributes(G, "weight"),
                                  font_size=9, rotate=False,
                                  bbox=dict(boxstyle="round,pad=0.12", fc="white", ec="none", alpha=0.85))
-    ax.set_title("Крок 8: ребро B–C замкнуло б цикл  B → E → C → B", fontsize=12)
+    ax.set_title(t("Крок 8: ребро B–C замкнуло б цикл  B → E → C → B"), fontsize=12)
     ax.set_axis_off(); ax.margins(0.13)
     ax.legend(handles=[
-        Line2D([0], [0], color=C_MST, lw=3, label="вже у МОД"),
-        Line2D([0], [0], color=C_CONSIDER, lw=4, label="наявний шлях B→E→C"),
-        Line2D([0], [0], color=C_REJECT, lw=3, ls="--", label="B–C: замкнуло б цикл"),
+        Line2D([0], [0], color=C_MST, lw=3, label=t("вже у МОД")),
+        Line2D([0], [0], color=C_CONSIDER, lw=4, label=t("наявний шлях B→E→C")),
+        Line2D([0], [0], color=C_REJECT, lw=3, ls="--", label=t("B–C: замкнуло б цикл")),
     ], loc="lower right", fontsize=9, frameon=False)
     fig.tight_layout()
     return fig

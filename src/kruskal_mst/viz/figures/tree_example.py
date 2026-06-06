@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 from ..core.palette import C_NODE, C_NODE_EDGE, C_BASE_EDGE, C_MST, A_DSU
+from ..core.i18n import t
 
 
 def spanning_tree_example():
@@ -35,7 +36,7 @@ def spanning_tree_example():
                            edgecolors=C_NODE_EDGE, linewidths=1.8)
     nx.draw_networkx_labels(G, POS, ax=ax1, font_size=14, font_weight="bold", font_color="#15384A")
     nx.draw_networkx_edges(G, POS, ax=ax1, width=2.2, edge_color=A_DSU)
-    ax1.set_title("Граф G: 4 вершини, 5 ребер (є цикли)", fontsize=12)
+    ax1.set_title(t("Граф G: 4 вершини, 5 ребер (є цикли)"), fontsize=12)
     ax1.set_axis_off(); ax1.margins(0.18)
 
     # Праворуч: остовне дерево (зелене), відкинуті ребра — сірим пунктиром
@@ -46,7 +47,7 @@ def spanning_tree_example():
     nx.draw_networkx_edges(G, POS, ax=ax2, edgelist=non_tree, width=1.8,
                            edge_color=C_BASE_EDGE, style="dashed")
     nx.draw_networkx_edges(T, POS, ax=ax2, edgelist=tree_edges, width=3.4, edge_color=C_MST)
-    ax2.set_title("Остовне дерево T: ті самі 4 вершини, 3 ребра", fontsize=12)
+    ax2.set_title(t("Остовне дерево T: ті самі 4 вершини, 3 ребра"), fontsize=12)
     ax2.set_axis_off(); ax2.margins(0.18)
 
     fig.tight_layout()

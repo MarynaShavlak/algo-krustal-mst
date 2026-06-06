@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 
 from ..core.palette import C_NODE, C_NODE_EDGE, C_MST
+from ..core.i18n import t
 
 C_ARROW = "#777"   # стрілки вказівників (темно-сірі саме для цієї схеми)
 
@@ -24,7 +25,7 @@ def _draw_forest(ax, parent, pos, root, title):
                            arrows=True, arrowstyle="-|>", arrowsize=22,
                            node_size=900, min_source_margin=18, min_target_margin=18)
     rx, ry = pos[root]
-    ax.annotate("корінь", (rx, ry), xytext=(rx + 0.55, ry + 0.15),
+    ax.annotate(t("корінь"), (rx, ry), xytext=(rx + 0.55, ry + 0.15),
                 fontsize=10, color=C_MST, fontweight="bold")
     # явні межі (вузли ланцюга всі при x=0 → інакше bbox «tight» розпливається)
     xs = [p[0] for p in pos.values()]; ys = [p[1] for p in pos.values()]
@@ -40,12 +41,12 @@ def chain_vs_flat():
     # Ліворуч: вироджений ланцюг (без оптимізацій)
     _draw_forest(ax1, {1: 1, 2: 1, 3: 2, 4: 3, 5: 4},
                  {1: (0, 4), 2: (0, 3), 3: (0, 2), 4: (0, 1), 5: (0, 0)}, 1,
-                 "Без оптимізацій: ланцюг\nfind(5) = 4 кроки до кореня")
+                 t("Без оптимізацій: ланцюг\nfind(5) = 4 кроки до кореня"))
 
     # Праворуч: пласке дерево (після стиснення шляху / union by rank)
     _draw_forest(ax2, {1: 1, 2: 1, 3: 1, 4: 1, 5: 1},
                  {1: (1.5, 2), 2: (0, 0.4), 3: (1, 0.4), 4: (2, 0.4), 5: (3, 0.4)}, 1,
-                 "Зі стисненням шляху: пласко\nfind(5) = 1 крок до кореня")
+                 t("Зі стисненням шляху: пласко\nfind(5) = 1 крок до кореня"))
 
     fig.subplots_adjust(top=0.84, wspace=0.08)
     return fig

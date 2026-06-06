@@ -12,6 +12,7 @@ import networkx as nx
 
 from ...graph import POS
 from ..core.palette import C_NODE, C_NODE_EDGE, C_MST, C_CONSIDER, C_VISIT, C_FAINT_DOT
+from ..core.i18n import t
 
 C_FOREST = "#444"   # ребра лісу (по них іде BFS)
 C_ARROW = "#888"    # стрілки вказівників DSU
@@ -49,7 +50,7 @@ def compare_has_path_vs_dsu(G, pos=POS):
     for n, num in visit_num.items():
         x, y = pos[n]
         axL.annotate(str(num), (x, y), xytext=(x + 0.28, y + 0.30), fontsize=11, fontweight="bold", color="#B5651D")
-    axL.set_title("nx.has_path(B, C): обходить граф по ребрах", fontsize=12)
+    axL.set_title(t("nx.has_path(B, C): обходить граф по ребрах"), fontsize=12)
     axL.set_axis_off(); axL.margins(0.16)
     axL.text(0.5, -0.04,
              "BFS від B крокує по ребрах: B → A → E → D → C …\n"
@@ -75,15 +76,15 @@ def compare_has_path_vs_dsu(G, pos=POS):
                            arrows=True, arrowstyle="-|>", arrowsize=22, node_size=900,
                            min_source_margin=16, min_target_margin=16)
     rx, ry = DPOS["A"]
-    axR.annotate("корінь A", (rx, ry), xytext=(rx + 0.35, ry + 0.18), fontsize=10, color=C_MST, fontweight="bold")
-    axR.set_title("DSU: find(B) == find(C)? — підняття до кореня", fontsize=12)
+    axR.annotate(t("корінь A"), (rx, ry), xytext=(rx + 0.35, ry + 0.18), fontsize=10, color=C_MST, fontweight="bold")
+    axR.set_title(t("DSU: find(B) == find(C)? — підняття до кореня"), fontsize=12)
     axR.set_axis_off(); axR.margins(0.16)
     axR.text(0.5, -0.04,
              "find(B): B → A (1 стрибок);  find(C): C → A (1 стрибок)\n"
              "корені однакові (A == A)  →  ЦИКЛ",
              transform=axR.transAxes, ha="center", va="top", fontsize=9.5, color="#333")
 
-    fig.suptitle("Перевірка «чи B і C вже з'єднані?» (крок 8, ребро B–C)",
+    fig.suptitle(t("Перевірка «чи B і C вже з'єднані?» (крок 8, ребро B–C)"),
                  fontsize=13, fontweight="bold", y=1.0)
     fig.subplots_adjust(top=0.9, bottom=0.14, wspace=0.05)
     return fig
