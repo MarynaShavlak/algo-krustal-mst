@@ -530,7 +530,10 @@ What to watch:
 
 ▶️ *The same video — with play / pause / seek buttons:*
 
-https://github.com/user-attachments/assets/ac0897b4-e85e-4c5b-b60d-031326df973d
+
+https://github.com/user-attachments/assets/90204cb6-671c-4b31-83ae-76ddf3c7bb8e
+
+
 
 <a id="sec8"></a>
 
@@ -689,7 +692,11 @@ The main tool is a **queue** (FIFO principle: first in, first processed):
 
 ▶️ *The same video — with play / pause / seek buttons:*
 
-https://github.com/user-attachments/assets/d7326e5c-f650-4d40-ad8b-a5baa1f0aa99
+
+
+https://github.com/user-attachments/assets/aa6c899e-23c7-44f7-befe-a710f07a54fb
+
+
 
 <a id="sec12"></a>
 
@@ -709,7 +716,13 @@ When the queue finally empties and G has still not been found → no path → E 
 
 ▶️ *The same video — with play / pause / seek buttons:*
 
-https://github.com/user-attachments/assets/378874d0-b067-489c-8815-c46e4a495e22
+
+
+
+https://github.com/user-attachments/assets/d3ff5f8a-d962-40e7-8d3d-d1f6a1296605
+
+
+
 
 <a id="sec13"></a>
 
@@ -725,7 +738,13 @@ The structure on the right panel (A is the root; B, C, D, F → A; E → C; G se
 
 ▶️ *The same video — with play / pause / seek buttons:*
 
-https://github.com/user-attachments/assets/1928f991-48b9-4646-b1a4-b464e6f8a966
+
+
+
+https://github.com/user-attachments/assets/31da5617-04de-4122-96db-ec4b30287a20
+
+
+
 
 What to watch:
 
